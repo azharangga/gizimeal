@@ -136,6 +136,7 @@ export function FileUpload({
                 key={`${f.name}-${i}`}
                 className="group relative overflow-hidden rounded-lg border border-border bg-card"
               >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={url}
                   alt={f.name}

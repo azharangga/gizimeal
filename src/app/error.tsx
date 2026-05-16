@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 export default function Error({
   error,
   reset,
@@ -21,9 +23,9 @@ export default function Error({
           >
             Coba lagi
           </button>
-          <a href="/" className="rounded-md border border-border bg-background px-4 py-2 text-sm">
+          <Link href="/" className="rounded-md border border-border bg-background px-4 py-2 text-sm">
             Beranda
-          </a>
+          </Link>
         </div>
       </div>
     </div>
