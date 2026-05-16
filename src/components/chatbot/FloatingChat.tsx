@@ -4,7 +4,7 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle } from "lucide-react";
-import { ChatInterface } from "./ChatInterface";
+import { ChatInterface } from "@/components/chatbot/ChatInterface";
 
 export function FloatingChat() {
   const [open, setOpen] = useState(false);

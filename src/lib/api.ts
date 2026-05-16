@@ -1,4 +1,3 @@
-import { API_BASE_URL } from "./constants";
 import type {
   HealthResponse,
   PredictionResponse,
@@ -7,13 +6,13 @@ import type {
   ClassesResponse,
   BMRRequest,
   BMRResponse,
-} from "./types";
+} from "@/lib/types";
 
 async function handleApiError(response: Response): Promise<never> {
   let detail = "";
   try {
     const data = await response.json();
-    detail = data?.detail || data?.message || "";
+    detail = data?.detail || data?.message || data?.error || "";
   } catch {
     /* ignore */
   }
@@ -23,7 +22,7 @@ async function handleApiError(response: Response): Promise<never> {
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   let res: Response;
   try {
-    res = await fetch(`${API_BASE_URL}${path}`, init);
+    res = await fetch(`/api${path}`, init);
   } catch {
     throw new Error("Gagal terhubung ke server. Coba beberapa saat lagi.");
   }

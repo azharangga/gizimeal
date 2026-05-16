@@ -1,7 +1,3 @@
-export const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL ||
-  "https://cc26-psu393-gizimeal-api.hf.space";
-
 export const MAX_FILES = 15;
 export const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1 MB
 export const MAX_TOTAL_SIZE = 15 * 1024 * 1024; // 15 MB
@@ -18,7 +14,7 @@ export const ACTIVITY_LEVELS = [
 
 export const NUTRIENT_LABELS: Record<string, string> = {
   "Energy kcal": "Energi (kcal)",
-  "Carbs": "Karbohidrat (g)",
+  Carbs: "Karbohidrat (g)",
   "Protein(g)": "Protein (g)",
   "Fat(g)": "Lemak (g)",
   "Fibre(g)": "Serat (g)",

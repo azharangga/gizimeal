@@ -1,4 +1,4 @@
-import type { MenuRecommendation } from "./types";
+import type { MenuRecommendation } from "@/lib/types";
 
 // Heuristic recipe generator — used because the API only returns menu names
 // and nutrient totals, not actual recipe steps. Produces plausible Indonesian

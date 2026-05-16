@@ -4,7 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Clock, Flame, Sparkles } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { ScoreAKGBadge } from "./ScoreAKGBadge";
+import { ScoreAKGBadge } from "@/components/prediction/ScoreAKGBadge";
 import type { MenuRecommendation } from "@/lib/types";
 import { buildRecipe } from "@/lib/recipe";
 import { slugifyMenu } from "@/lib/predict-store";

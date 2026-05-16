@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import "./globals.css";
-import { ClientLayout } from "./client-layout";
+import "@/app/globals.css";
+import { Providers } from "@/app/providers";
 
 export const metadata: Metadata = {
   title: "GiziMeal, Deteksi Bahan Makanan & Rekomendasi menu gizi seimbang",
@@ -8,7 +8,8 @@ export const metadata: Metadata = {
     "Platform untuk mengenali bahan makanan, menampilkan informasi gizi, dan memberi rekomendasi menu gizi seimbang.",
   openGraph: {
     title: "GiziMeal, Deteksi Bahan & menu gizi seimbang",
-    description: "Deteksi bahan makanan, estimasi kalori, dan rekomendasi menu gizi seimbang.",
+    description:
+      "Deteksi bahan makanan, estimasi kalori, dan rekomendasi menu gizi seimbang.",
     type: "website",
   },
   twitter: {
@@ -29,7 +30,11 @@ export default function RootLayout({
     <html lang="id" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
@@ -41,7 +46,7 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <ClientLayout>{children}</ClientLayout>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

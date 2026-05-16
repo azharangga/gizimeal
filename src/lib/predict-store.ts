@@ -1,4 +1,4 @@
-import type { PredictionResponse, MenuRecommendation } from "./types";
+import type { PredictionResponse, MenuRecommendation } from "@/lib/types";
 
 const KEY = "gizimeal:lastPrediction";
 
