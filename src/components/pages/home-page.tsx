@@ -303,9 +303,17 @@ function TestimonialCard({ name, role, quote, rating }: { name: string; role: st
           <p className="text-sm font-semibold">{name}</p>
           <p className="text-xs text-muted-foreground">{role}</p>
         </figcaption>
-        <div className="flex gap-0.5">
+       <div className="flex gap-0.5">
           {Array.from({ length: 5 }).map((_, i) => (
-            <Star key={i} className={i < rating ? "h-3.5 w-3.5 fill-foreground/70 text-foreground/70" : "h-3.5 w-3.5 fill-muted-foreground/20 text-muted-foreground/20"} strokeWidth={0} />
+            <Star
+              key={i}
+              className={
+                i < rating
+                  ? "h-3.5 w-3.5 fill-yellow-400 text-yellow-400"
+                  : "h-3.5 w-3.5 fill-muted-foreground/20 text-muted-foreground/20"
+              }
+              strokeWidth={0}
+            />
           ))}
         </div>
       </div>
