@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useRef, useState, type DragEvent } from "react";
-import { UploadCloud, X } from "lucide-react";
+import { ImagePlus, X, FileImage } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ErrorAlert } from "@/components/common/ErrorAlert";
 import {
@@ -80,55 +80,56 @@ export function FileUpload({
 
   return (
     <div className="space-y-4">
+      {/* Drop zone */}
       <div
-        onDragOver={(e) => {
-          e.preventDefault();
-          setDragOver(true);
-        }}
+        onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}
         onDrop={onDrop}
+        onClick={() => inputRef.current?.click()}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => e.key === "Enter" && inputRef.current?.click()}
+        aria-label="Unggah gambar"
         className={[
-          "rounded-xl border border-dashed p-8 text-center transition-colors",
+          "relative cursor-pointer rounded-xl border-2 border-dashed p-10 text-center transition-colors duration-150 select-none",
           dragOver
-            ? "border-primary bg-primary/5"
-            : "border-border bg-[var(--surface-alt)]",
+            ? "border-foreground/30 bg-secondary/60"
+            : "border-border hover:border-foreground/20 hover:bg-secondary/40",
         ].join(" ")}
       >
-        <div className="mx-auto flex flex-col items-center">
-          <span className="flex h-10 w-10 items-center justify-center rounded-md bg-primary/10">
-            <UploadCloud className="h-5 w-5 text-foreground" />
-          </span>
-          <p className="mt-3 text-sm font-semibold">Tarik gambar ke sini atau pilih file</p>
-          <p className="mt-1 text-xs text-muted-foreground">
-            JPG/PNG, maksimal 1 MB per file, maksimal 15 gambar.
-          </p>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="mt-4"
-            onClick={() => inputRef.current?.click()}
-          >
-            Pilih gambar
-          </Button>
-          <input
-            ref={inputRef}
-            type="file"
-            multiple
-            accept="image/jpeg,image/png"
-            className="hidden"
-            onChange={(e) => {
-              if (e.target.files) validateAndAdd(e.target.files);
-              e.target.value = "";
-            }}
-          />
+        <div className="mx-auto flex flex-col items-center gap-3">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-border bg-background">
+            <ImagePlus className="h-5 w-5 text-muted-foreground" />
+          </div>
+          <div>
+            <p className="text-sm font-medium text-foreground">
+              Tarik gambar ke sini atau{" "}
+              <span className="text-primary underline underline-offset-2">pilih file</span>
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              JPG atau PNG · Maks. 1 MB per file · Maks. 15 gambar
+            </p>
+          </div>
         </div>
+        <input
+          ref={inputRef}
+          type="file"
+          multiple
+          accept="image/jpeg,image/png"
+          className="hidden"
+          onClick={(e) => e.stopPropagation()}
+          onChange={(e) => {
+            if (e.target.files) validateAndAdd(e.target.files);
+            e.target.value = "";
+          }}
+        />
       </div>
 
       {error && <ErrorAlert title="File tidak valid" message={error} />}
 
+      {/* Preview grid */}
       {files.length > 0 && (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
           {files.map((f, i) => {
             const url = URL.createObjectURL(f);
             return (
@@ -140,24 +141,42 @@ export function FileUpload({
                 <img
                   src={url}
                   alt={f.name}
-                  className="h-32 w-full object-cover"
+                  className="aspect-square w-full object-cover"
                   onLoad={() => URL.revokeObjectURL(url)}
                 />
+                {/* Remove button */}
                 <button
                   type="button"
                   onClick={() => remove(i)}
                   aria-label={`Hapus ${f.name}`}
-                  className="absolute right-1.5 top-1.5 rounded-md bg-background/90 p-1 opacity-0 ring-1 ring-border transition-opacity group-hover:opacity-100"
+                  className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-md bg-background/90 opacity-0 ring-1 ring-border/60 transition-opacity group-hover:opacity-100"
                 >
-                  <X className="h-3.5 w-3.5" />
+                  <X className="h-3 w-3" />
                 </button>
-                <div className="border-t border-border-soft p-2">
-                  <p className="truncate text-xs font-semibold">{f.name}</p>
-                  <p className="text-[11px] text-muted-foreground">{formatBytes(f.size)}</p>
+                {/* File info overlay */}
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent px-2 py-1.5 opacity-0 transition-opacity group-hover:opacity-100">
+                  <p className="truncate text-[10px] font-medium text-white">{f.name}</p>
+                  <p className="text-[9px] text-white/70">{formatBytes(f.size)}</p>
                 </div>
+                {/* Index badge */}
+                <span className="absolute left-1 top-1 flex h-5 w-5 items-center justify-center rounded-md bg-background/80 text-[10px] font-semibold text-foreground ring-1 ring-border/40">
+                  {i + 1}
+                </span>
               </div>
             );
           })}
+
+          {/* Add more tile */}
+          {files.length < MAX_FILES && (
+            <button
+              type="button"
+              onClick={() => inputRef.current?.click()}
+              className="flex aspect-square w-full flex-col items-center justify-center gap-1.5 rounded-lg border-2 border-dashed border-border text-muted-foreground transition-colors hover:border-foreground/20 hover:bg-secondary/40"
+            >
+              <FileImage className="h-5 w-5" />
+              <span className="text-[10px]">Tambah</span>
+            </button>
+          )}
         </div>
       )}
     </div>

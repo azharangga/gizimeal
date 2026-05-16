@@ -178,27 +178,28 @@ export function PredictPage() {
                 </Card>
 
                 {/* Tips */}
-                <Card className="border-border bg-secondary/30 shadow-sm">
+                <Card className="border-border shadow-sm">
                   <CardContent className="p-5 sm:p-6">
                     <div className="flex items-center gap-2">
                       <Lightbulb className="h-4 w-4 text-primary" />
                       <p className="text-sm font-semibold">Tips Foto yang Baik</p>
                     </div>
-                    <ul className="mt-3 space-y-2 text-xs text-muted-foreground">
-                      <li className="flex items-start gap-2">
-                        <span className="mt-1 h-1 w-1 flex-shrink-0 rounded-full bg-primary" />
+                    <Separator className="my-4" />
+                    <ul className="space-y-2.5 text-sm text-muted-foreground">
+                      <li className="flex items-start gap-2.5">
+                        <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
                         Pencahayaan terang dan merata
                       </li>
-                      <li className="flex items-start gap-2">
-                        <span className="mt-1 h-1 w-1 flex-shrink-0 rounded-full bg-primary" />
+                      <li className="flex items-start gap-2.5">
+                        <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
                         Satu jenis bahan per gambar untuk hasil optimal
                       </li>
-                      <li className="flex items-start gap-2">
-                        <span className="mt-1 h-1 w-1 flex-shrink-0 rounded-full bg-primary" />
+                      <li className="flex items-start gap-2.5">
+                        <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
                         Latar belakang polos memudahkan deteksi
                       </li>
-                      <li className="flex items-start gap-2">
-                        <span className="mt-1 h-1 w-1 flex-shrink-0 rounded-full bg-primary" />
+                      <li className="flex items-start gap-2.5">
+                        <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
                         Pastikan bahan terlihat jelas dan tidak tertutup
                       </li>
                     </ul>

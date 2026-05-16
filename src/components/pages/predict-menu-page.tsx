@@ -69,8 +69,8 @@ export function MenuPage() {
             </Link>
           </Button>
 
-          <div className="mt-5 grid items-end gap-8 md:grid-cols-12">
-            <div className="md:col-span-8">
+          <div className="mt-5 grid items-center gap-6 md:grid-cols-12">
+            <div className="md:col-span-7">
               <div className="flex flex-wrap items-center gap-2">
                 {menu.is_best && (
                   <Badge className="bg-primary text-primary-foreground hover:bg-[var(--primary-hover)]">
@@ -79,11 +79,11 @@ export function MenuPage() {
                 )}
                 <ScoreAKGBadge score={menu.score_akg} />
               </div>
-              <h1 className="mt-4 text-2xl font-semibold leading-tight tracking-tight sm:text-3xl md:text-5xl">
+              <h1 className="mt-4 text-xl font-semibold leading-tight tracking-tight sm:text-2xl md:text-3xl">
                 {menu.menu_name}
               </h1>
               {menu.matched_ingredients.length > 0 && (
-                <p className="mt-3 text-sm text-muted-foreground">
+                <p className="mt-2 text-sm text-muted-foreground">
                   Bahan terdeteksi:{" "}
                   <span className="text-foreground capitalize">
                     {menu.matched_ingredients.join(", ")}
@@ -91,13 +91,13 @@ export function MenuPage() {
                 </p>
               )}
               {menu.explanation && (
-                <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground md:text-[15px]">
+                <p className="mt-2 max-w-xl text-xs leading-relaxed text-muted-foreground sm:text-sm">
                   {menu.explanation}
                 </p>
               )}
             </div>
 
-            <div className="md:col-span-4">
+            <div className="md:col-span-5">
               <div className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-border-soft bg-border-soft">
                 <MetaCell icon={<Clock className="h-3.5 w-3.5" />} label="Durasi" value={recipe.duration} />
                 <MetaCell icon={<Users className="h-3.5 w-3.5" />} label="Porsi" value={recipe.serving} />
@@ -133,17 +133,18 @@ export function MenuPage() {
                   </CardContent>
                 </Card>
 
-                <Card className="bg-secondary/40">
+                <Card>
                   <CardContent className="p-6">
-                    <h3 className="flex items-center gap-2 text-sm font-semibold">
-                      <Sparkles className="h-3.5 w-3.5 text-primary" />
-                      Tips dari ahli gizi
+                    <h3 className="flex items-center gap-2 text-lg font-semibold">
+                      <Sparkles className="h-4 w-4 text-primary" strokeWidth={1.8} />
+                      Tips
                     </h3>
-                    <ul className="mt-3 space-y-2 text-xs text-muted-foreground">
+                    <Separator className="my-4" />
+                    <ul className="space-y-2.5 text-sm text-muted-foreground">
                       {recipe.tips.map((t: string) => (
-                        <li key={t} className="flex items-start gap-2">
-                          <span className="mt-1 h-1 w-1 flex-shrink-0 rounded-full bg-muted-foreground" />
-                          <span>{t}</span>
+                        <li key={t} className="flex items-start gap-2.5">
+                          <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
+                          <span className="text-foreground/90">{t}</span>
                         </li>
                       ))}
                     </ul>

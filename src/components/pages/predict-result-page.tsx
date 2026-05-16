@@ -6,11 +6,9 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   ArrowLeft,
-  CheckCircle2,
   Sparkles,
   UtensilsCrossed,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -154,23 +152,25 @@ export function ResultPage() {
 
             {data.mode === "single" && (
               <div className="md:col-span-5">
-                <Card>
-                  <CardContent className="flex items-center gap-4 p-4 sm:gap-6 sm:p-6">
-                    <ConfidenceRing
-                      value={data.prediction.confidence_score}
-                    />
-                    <div className="min-w-0 flex-1">
-                      <Badge
-                        variant="outline"
-                        className="border-primary/40 bg-primary/10 text-foreground"
-                      >
-                        <CheckCircle2 className="mr-1 h-3 w-3" />
-                        Gambar tunggal
-                      </Badge>
-                      <p className="mt-2 text-2xl font-semibold capitalize">
+                <Card className="overflow-hidden border-border">
+                  <CardContent className="flex items-center gap-5 p-5 sm:p-6">
+                    {/* Confidence ring */}
+                    <div className="flex-shrink-0">
+                      <ConfidenceRing value={data.prediction.confidence_score} />
+                    </div>
+
+                    {/* Divider */}
+                    <div className="h-20 w-px bg-border flex-shrink-0" />
+
+                    {/* Info */}
+                    <div className="min-w-0 flex-1 space-y-1">
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-primary">
+                        Bahan Terdeteksi
+                      </p>
+                      <p className="text-2xl font-semibold capitalize leading-tight">
                         {data.prediction.detected_item}
                       </p>
-                      <p className="mt-1 truncate text-xs text-muted-foreground">
+                      <p className="truncate text-xs text-muted-foreground">
                         {data.filename}
                       </p>
                     </div>
@@ -202,7 +202,7 @@ export function ResultPage() {
                     key={`${p.filename}-${i}`}
                     className="flex items-center gap-3 rounded-xl border border-border bg-card p-4"
                   >
-                    <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10 text-sm font-semibold text-primary">
+                    <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg border border-border bg-secondary text-xs font-semibold text-foreground">
                       {i + 1}
                     </span>
                     <div className="min-w-0 flex-1">
@@ -216,7 +216,7 @@ export function ResultPage() {
                       <p className="truncate text-xs text-muted-foreground">{p.filename}</p>
                     </div>
                     {p.confidence_percent && (
-                      <span className="text-sm font-semibold text-foreground">
+                      <span className="text-sm font-semibold tabular-nums text-foreground">
                         {p.confidence_percent}
                       </span>
                     )}
