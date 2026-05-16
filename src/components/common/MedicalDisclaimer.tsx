@@ -1,5 +1,5 @@
 import { Info } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+import Link from "next/link";
 
 export function MedicalDisclaimer({ compact = false }: { compact?: boolean }) {
   if (compact) {
@@ -9,7 +9,7 @@ export function MedicalDisclaimer({ compact = false }: { compact?: boolean }) {
         <span>
           Informasi bersifat edukatif dan bukan pengganti konsultasi tenaga
           kesehatan. Lihat{" "}
-          <Link to="/referensi" className="underline underline-offset-2 hover:text-foreground">
+          <Link href="/referensi" className="underline underline-offset-2 hover:text-foreground">
             sumber referensi
           </Link>
           .
@@ -33,17 +33,17 @@ export function MedicalDisclaimer({ compact = false }: { compact?: boolean }) {
           <p className="mt-1 text-muted-foreground">
             GiziMeal adalah platform edukasi gizi. Estimasi kalori, klasifikasi
             bahan, dan rekomendasi menu disusun berdasarkan{" "}
-            <Link to="/referensi" className="text-foreground underline underline-offset-2">
+            <Link href="/referensi" className="text-foreground underline underline-offset-2">
               Permenkes No. 28 Tahun 2019 (AKG)
             </Link>{" "}
             dan{" "}
-            <Link to="/referensi" className="text-foreground underline underline-offset-2">
+            <Link href="/referensi" className="text-foreground underline underline-offset-2">
               Pedoman Gizi Seimbang Kemenkes RI
             </Link>
             . Hasil bersifat informatif dan tidak menggantikan
             konsultasi dengan dokter, ahli gizi, maupun tenaga
             kesehatan profesional. Daftar lengkap sumber referensi tersedia pada halaman{" "}
-            <Link to="/referensi" className="text-foreground underline underline-offset-2">
+            <Link href="/referensi" className="text-foreground underline underline-offset-2">
               Referensi
             </Link>
             .

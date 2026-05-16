@@ -1,3 +1,5 @@
+"use client";
+
 import { useCallback, useRef, useState, type DragEvent } from "react";
 import { UploadCloud, X } from "lucide-react";
 import { Button } from "@/components/ui/button";

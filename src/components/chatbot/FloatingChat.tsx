@@ -1,5 +1,7 @@
+"use client";
+
 import { useState } from "react";
-import { useRouterState } from "@tanstack/react-router";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle } from "lucide-react";
 import { ChatInterface } from "./ChatInterface";
@@ -7,7 +9,7 @@ import { ChatInterface } from "./ChatInterface";
 export function FloatingChat() {
   const [open, setOpen] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const pathname = usePathname();
 
   if (pathname === "/chatbot" || pathname === "/login" || pathname === "/register") {
     return null;

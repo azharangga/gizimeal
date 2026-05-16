@@ -1,4 +1,6 @@
-import { Link } from "@tanstack/react-router";
+"use client";
+
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Clock, Flame, Sparkles } from "lucide-react";
 import { Card } from "@/components/ui/card";
@@ -26,8 +28,7 @@ export function MenuRecommendationCard({
       className="h-full"
     >
       <Link
-        to="/predict/result/menu/$slug"
-        params={{ slug }}
+        href={`/predict/result/menu/${slug}`}
         className="group block h-full focus:outline-none"
       >
         <Card

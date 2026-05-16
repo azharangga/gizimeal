@@ -1,30 +1,21 @@
+"use client";
+
 import { useEffect, useState } from "react";
-import { useRouterState } from "@tanstack/react-router";
-import { useIsFetching, useIsMutating } from "@tanstack/react-query";
+import { usePathname } from "next/navigation";
 
 /**
  * Slim progress indicator pinned to the top of the viewport.
- * Activates whenever the router is navigating/loading or react-query
- * has any in-flight fetch/mutation.
+ * Activates on route changes.
  */
 export function TopProgressBar() {
-  const routerLoading = useRouterState({
-    select: (s) => s.isLoading || s.isTransitioning || s.status === "pending",
-  });
-  const isFetching = useIsFetching();
-  const isMutating = useIsMutating();
-  const active = routerLoading || isFetching > 0 || isMutating > 0;
-
-  // Linger briefly so the bar is visible even on fast transitions.
+  const pathname = usePathname();
   const [visible, setVisible] = useState(false);
+
   useEffect(() => {
-    if (active) {
-      setVisible(true);
-      return;
-    }
-    const t = setTimeout(() => setVisible(false), 280);
+    setVisible(true);
+    const t = setTimeout(() => setVisible(false), 400);
     return () => clearTimeout(t);
-  }, [active]);
+  }, [pathname]);
 
   return (
     <div

@@ -1,3 +1,5 @@
+"use client";
+
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Bot, Check, Copy, Loader2, Maximize2, Minimize2, RefreshCw, Send, ThumbsDown, ThumbsUp, User, X } from "lucide-react";

@@ -1,6 +1,5 @@
 export const API_BASE_URL =
-  (import.meta.env.VITE_API_BASE_URL as string | undefined) ||
-  (import.meta.env.NEXT_PUBLIC_API_BASE_URL as string | undefined) ||
+  process.env.NEXT_PUBLIC_API_BASE_URL ||
   "https://cc26-psu393-gizimeal-api.hf.space";
 
 export const MAX_FILES = 15;

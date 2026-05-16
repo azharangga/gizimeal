@@ -1,5 +1,8 @@
+"use client";
+
 import { useState } from "react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { LogIn, LogOut, Menu, Moon, Sun, User } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -15,6 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/lib/auth";
+import Image from "next/image";
 
 const links = [
   { to: "/", label: "Beranda" },
@@ -31,33 +35,34 @@ export function Navbar() {
   const [open, setOpen] = useState(false);
   const { user, isAuthenticated, logout } = useAuth();
   const { toggle } = useTheme();
-  const navigate = useNavigate();
+  const router = useRouter();
+  const pathname = usePathname();
 
   const handleLogout = () => {
     logout();
     toast.success("Berhasil keluar", { description: "Sampai jumpa lagi." });
     setOpen(false);
-    navigate({ to: "/" });
+    router.push("/");
+  };
+
+  const isActive = (to: string) => {
+    if (to === "/") return pathname === "/";
+    return pathname.startsWith(to);
   };
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70">
       <div className="mx-auto flex h-16 max-w-[1280px] items-center justify-between px-6">
-        <Link to="/" className="flex items-center gap-2.5">
-          <img src={logo} alt="GiziMeal" className="h-8 w-auto rounded-md object-contain dark:brightness-0 dark:invert" />
-          {/* <span className="text-lg font-semibold leading-none tracking-tight">
-            GiziMeal
-          </span> */}
+        <Link href="/" className="flex items-center gap-2.5">
+          <Image src={logo} alt="GiziMeal" className="h-8 w-auto rounded-md object-contain dark:brightness-0 dark:invert" height={32} width={100} />
         </Link>
 
         <nav className="hidden items-center gap-1 lg:flex">
           {links.map((l) => (
             <Link
               key={l.to}
-              to={l.to}
-              className="relative rounded-md px-3 py-1.5 text-[13px] tracking-wide text-muted-foreground transition-colors hover:bg-secondary/60 hover:text-foreground"
-              activeProps={{ className: "bg-primary/10 text-primary font-semibold" }}
-              activeOptions={{ exact: l.to === "/" }}
+              href={l.to}
+              className={`relative rounded-md px-3 py-1.5 text-[13px] tracking-wide text-muted-foreground transition-colors hover:bg-secondary/60 hover:text-foreground ${isActive(l.to) ? "bg-primary/10 text-primary font-semibold" : ""}`}
             >
               {l.label}
             </Link>
@@ -96,7 +101,7 @@ export function Navbar() {
             </DropdownMenu>
           ) : (
             <Button asChild size="sm" className="bg-primary text-primary-foreground hover:bg-[var(--primary-hover)]">
-              <Link to="/login">
+              <Link href="/login">
                 <LogIn className="mr-1.5 h-3.5 w-3.5" />
                 Masuk
               </Link>
@@ -117,11 +122,9 @@ export function Navbar() {
                 {links.map((l) => (
                   <Link
                     key={l.to}
-                    to={l.to}
+                    href={l.to}
                     onClick={() => setOpen(false)}
-                    className="rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-secondary hover:text-foreground"
-                    activeProps={{ className: "bg-secondary text-foreground" }}
-                    activeOptions={{ exact: l.to === "/" }}
+                    className={`rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-secondary hover:text-foreground ${isActive(l.to) ? "bg-secondary text-foreground" : ""}`}
                   >
                     {l.label}
                   </Link>
@@ -152,7 +155,7 @@ export function Navbar() {
                     className="mt-3 bg-primary text-primary-foreground hover:bg-[var(--primary-hover)]"
                     onClick={() => setOpen(false)}
                   >
-                    <Link to="/login">
+                    <Link href="/login">
                       <LogIn className="mr-2 h-4 w-4" />
                       Masuk
                     </Link>

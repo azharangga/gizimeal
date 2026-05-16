@@ -1,4 +1,5 @@
-import { Link } from "@tanstack/react-router";
+import Link from "next/link";
+import Image from "next/image";
 import logo from "@/assets/logo.png";
 
 export function AuthBrandPanel() {
@@ -32,15 +33,15 @@ export function AuthBrandPanel() {
       />
 
       <div className="relative z-10">
-        <Link to="/" className="inline-flex items-center gap-2.5">
-          <img src={logo} alt="GiziMeal" className="h-9 w-auto object-contain brightness-0 invert" />
+        <Link href="/" className="inline-flex items-center gap-2.5">
+          <Image src={logo} alt="GiziMeal" className="h-9 w-auto object-contain brightness-0 invert" height={36} width={120} />
         </Link>
       </div>
 
       <div className="relative z-10">
         <h1 className="max-w-md text-4xl font-semibold leading-[1.05] tracking-tight xl:text-5xl">
           Kenali bahan, pahami gizinya, sajikan menu dengan gizi seimbang.
-        </h1>fa
+        </h1>
         <p className="mt-5 max-w-md text-[15px] leading-relaxed text-primary-foreground/85">
           Foto bahan makanan yang kamu punya, lalu dapatkan rekomendasi menu
           lengkap beserta informasi gizinya berdasarkan Pedoman Gizi Seimbang dan Angka Kecukupan Gizi (AKG)
