@@ -159,7 +159,7 @@ export function FoodsPage() {
         <FadeUp className="mx-auto max-w-[1200px] px-4 py-10 sm:px-6 sm:py-12 md:py-16">
           <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Database className="h-3.5 w-3.5 text-primary" />
+              <Database className="h-3.5 w-3.5 text-muted-foreground" />
               {loading ? (
                 <span>Memuat data…</span>
               ) : (
@@ -183,7 +183,7 @@ export function FoodsPage() {
                   className={[
                     "rounded-full border px-2.5 py-1 text-[11px] transition-colors",
                     sort === s.value
-                      ? "border-primary/40 bg-primary/10 text-primary"
+                      ? "border-foreground/30 bg-secondary text-foreground font-medium"
                       : "border-border bg-background text-muted-foreground hover:border-foreground/30 hover:text-foreground",
                   ].join(" ")}
                 >

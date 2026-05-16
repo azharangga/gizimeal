@@ -56,7 +56,7 @@ export function CalculatorPage() {
           {/* Form */}
           <Card className="overflow-hidden">
             <div className="flex items-center gap-2 border-b border-border bg-secondary/30 px-5 py-3">
-              <Calculator className="h-4 w-4 text-primary" />
+              <Calculator className="h-4 w-4 text-muted-foreground" />
               <p className="text-sm font-semibold">Data Diri</p>
             </div>
             <CardContent className="p-5 sm:p-6">

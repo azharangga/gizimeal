@@ -162,7 +162,7 @@ export function FaqPage() {
               id={slug(g.title)}
               className="mb-12 scroll-mt-24"
             >
-              <h2 className="text-[11px] font-semibold uppercase tracking-[0.22em] text-primary">
+              <h2 className="text-[11px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
                 {g.title}
               </h2>
               <Accordion type="single" collapsible className="mt-3">
@@ -184,9 +184,9 @@ export function FaqPage() {
             </section>
           ))}
 
-          <div className="mt-6 overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-primary/5 via-card to-card p-8">
+          <div className="mt-6 overflow-hidden rounded-2xl border border-border bg-card p-8">
             <div className="flex items-start gap-4">
-              <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl border border-border bg-secondary text-muted-foreground">
                 <MessageCircle className="h-5 w-5" strokeWidth={1.8} />
               </span>
               <div className="flex-1">

@@ -103,7 +103,7 @@ function Section({
   return (
     <section className="mt-16 first:mt-0">
       <div className="flex items-center gap-3">
-        <span className="flex h-9 w-9 items-center justify-center rounded-md bg-primary/10 text-primary">
+        <span className="flex h-9 w-9 items-center justify-center rounded-md bg-secondary text-muted-foreground">
           <Icon className="h-4 w-4" />
         </span>
         <div>
@@ -124,7 +124,7 @@ function Section({
           >
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0 flex-1">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                   {r.code}
                 </p>
                 <h3 className="mt-1 font-semibold text-lg leading-snug">{r.title}</h3>
@@ -162,7 +162,7 @@ function FormulasSection() {
   return (
     <section className="mt-16">
       <div className="flex items-center gap-3">
-        <span className="flex h-9 w-9 items-center justify-center rounded-md bg-primary/10 text-primary">
+        <span className="flex h-9 w-9 items-center justify-center rounded-md bg-secondary text-muted-foreground">
           <Calculator className="h-4 w-4" />
         </span>
         <div>
@@ -282,7 +282,7 @@ export function ReferencesPage() {
     <>
       <section className="border-b border-border bg-secondary/40">
         <div className="mx-auto max-w-3xl px-4 pt-10 pb-10 sm:px-6 sm:pt-14 sm:pb-12 md:pt-20 md:pb-16">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-primary">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
             Referensi Ilmiah
           </p>
           <h1 className="mt-3 font-semibold text-[28px] leading-[1.1] sm:text-4xl md:text-5xl md:leading-[1.05]">

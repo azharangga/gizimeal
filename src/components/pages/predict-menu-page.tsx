@@ -118,14 +118,14 @@ export function MenuPage() {
                 <Card>
                   <CardContent className="p-6">
                     <h2 className="flex items-center gap-2 text-lg font-semibold">
-                      <UtensilsCrossed className="h-4 w-4 text-primary" strokeWidth={1.8} />
+                      <UtensilsCrossed className="h-4 w-4 text-muted-foreground" strokeWidth={1.8} />
                       Bahan-bahan
                     </h2>
                     <Separator className="my-4" />
                     <ul className="space-y-2.5 text-sm">
                       {recipe.ingredients.map((it: string, i: number) => (
                         <motion.li key={it} initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.25, delay: i * 0.03 }} className="flex items-start gap-2.5">
-                          <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
+                          <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-muted-foreground/40" />
                           <span className="text-foreground/90">{it}</span>
                         </motion.li>
                       ))}
@@ -136,14 +136,14 @@ export function MenuPage() {
                 <Card>
                   <CardContent className="p-6">
                     <h3 className="flex items-center gap-2 text-lg font-semibold">
-                      <Sparkles className="h-4 w-4 text-primary" strokeWidth={1.8} />
+                      <Sparkles className="h-4 w-4 text-muted-foreground" strokeWidth={1.8} />
                       Tips
                     </h3>
                     <Separator className="my-4" />
                     <ul className="space-y-2.5 text-sm text-muted-foreground">
                       {recipe.tips.map((t: string) => (
                         <li key={t} className="flex items-start gap-2.5">
-                          <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
+                          <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-muted-foreground/40" />
                           <span className="text-foreground/90">{t}</span>
                         </li>
                       ))}
@@ -156,11 +156,11 @@ export function MenuPage() {
             <SlideInRight className="lg:col-span-8 space-y-12">
               <section>
                 <div className="flex items-center gap-3">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-md bg-primary/10">
-                    <ListChecks className="h-4 w-4 text-primary" />
+                  <span className="flex h-9 w-9 items-center justify-center rounded-md border border-border bg-secondary">
+                    <ListChecks className="h-4 w-4 text-muted-foreground" />
                   </span>
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-wider text-primary">Cara Memasak</p>
+                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Cara Memasak</p>
                     <h2 className="text-2xl font-semibold">{recipe.steps.length} langkah</h2>
                   </div>
                 </div>
@@ -168,7 +168,7 @@ export function MenuPage() {
                 <ol className="mt-6 space-y-3">
                   {recipe.steps.map((s: string, i: number) => (
                     <motion.li key={i} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: i * 0.05 }} className="flex gap-4 rounded-lg border border-border bg-card p-5">
-                      <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">{i + 1}</span>
+                      <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-border bg-secondary text-sm font-semibold text-foreground">{i + 1}</span>
                       <p className="pt-1 text-[15px] leading-relaxed text-foreground/90">{s}</p>
                     </motion.li>
                   ))}
@@ -177,11 +177,11 @@ export function MenuPage() {
 
               <section>
                 <div className="flex items-center gap-3">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-md bg-primary/10">
-                    <HeartPulse className="h-4 w-4 text-primary" />
+                  <span className="flex h-9 w-9 items-center justify-center rounded-md border border-border bg-secondary">
+                    <HeartPulse className="h-4 w-4 text-muted-foreground" />
                   </span>
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-wider text-primary">Informasi Gizi</p>
+                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Informasi Gizi</p>
                     <h2 className="text-2xl font-semibold">Per porsi sajian</h2>
                   </div>
                 </div>

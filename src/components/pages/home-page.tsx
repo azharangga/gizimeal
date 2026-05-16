@@ -99,7 +99,7 @@ export function HomePage() {
         <div className="mx-auto max-w-[1240px] px-4 py-14 sm:px-6 sm:py-20 md:py-28">
           <div className="grid gap-10 md:grid-cols-12">
             <div className="md:col-span-4">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-primary">Empat Pilar Layanan</p>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">Empat Pilar Layanan</p>
               <h2 className="mt-3 font-semibold text-[28px] leading-[1.1] sm:text-4xl md:text-[44px] md:leading-[1.05]">
                 Pendekatan sederhana untuk gizi seimbang sehari-hari.
               </h2>
@@ -116,7 +116,7 @@ export function HomePage() {
                   { icon: Utensils, title: "Rekomendasi Menu", body: "Saran menu gizi seimbang lengkap dengan resep, bahan, dan informasi nutrisi per porsi.", to: "/predict" },
                 ].map(({ icon: Icon, title, body, to }, i) => (
                   <motion.div key={title} initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.4 }} transition={{ duration: 0.4, delay: i * 0.05 }} className="bg-background p-5 sm:p-7">
-                    <Icon className="h-5 w-5 text-primary" strokeWidth={1.8} />
+                    <Icon className="h-5 w-5 text-muted-foreground" strokeWidth={1.8} />
                     <h3 className="mt-4 font-semibold text-xl">{title}</h3>
                     <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{body}</p>
                     <Link href={to} className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-foreground hover:text-primary">
@@ -134,7 +134,7 @@ export function HomePage() {
       <section className="border-y border-border bg-[var(--surface-alt)]">
         <div className="mx-auto max-w-[1240px] px-4 py-14 sm:px-6 sm:py-20 md:py-28">
           <div className="max-w-2xl">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-primary">Metodologi</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">Metodologi</p>
             <h2 className="mt-3 font-semibold text-[28px] leading-[1.1] sm:text-4xl md:text-[44px] md:leading-[1.05]">
               Empat tahap pemeriksaan yang ringkas dan terdokumentasi.
             </h2>
@@ -147,7 +147,7 @@ export function HomePage() {
               { step: "04", title: "Edukasi & referensi", body: "Disertai resep, info gizi, dan referensi resmi." },
             ].map((s) => (
               <li key={s.step} className="bg-background p-5 sm:p-7">
-                <p className="font-semibold text-3xl text-primary">{s.step}</p>
+                <p className="font-semibold text-3xl text-foreground">{s.step}</p>
                 <h3 className="mt-3 text-base font-semibold">{s.title}</h3>
                 <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{s.body}</p>
               </li>
@@ -161,7 +161,7 @@ export function HomePage() {
         <div className="mx-auto max-w-[1240px] px-4 py-14 sm:px-6 sm:py-20 md:py-28">
           <div className="grid gap-12 md:grid-cols-12">
             <div className="md:col-span-5">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-primary">Berbasis Bukti</p>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">Berbasis Bukti</p>
               <h2 className="mt-3 font-semibold text-[28px] leading-[1.1] sm:text-4xl md:text-[44px] md:leading-[1.05]">
                 Rekomendasi yang dapat ditelusuri ke sumber resmi.
               </h2>
@@ -184,9 +184,9 @@ export function HomePage() {
                   { code: "FAO/WHO/UNU (2001)", body: "Human Energy Requirements, Physical Activity Level (PAL) untuk estimasi TDEE." },
                 ].map((r) => (
                   <li key={r.code} className="flex items-start gap-4 rounded-lg border border-border-soft bg-card p-4">
-                    <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary" />
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-muted-foreground" />
                     <div>
-                      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">{r.code}</p>
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">{r.code}</p>
                       <p className="mt-1 text-sm text-foreground/85">{r.body}</p>
                     </div>
                   </li>
@@ -201,7 +201,7 @@ export function HomePage() {
       <section className="border-t border-border overflow-hidden bg-secondary/40">
         <div className="mx-auto max-w-[1240px] px-4 py-14 sm:px-6 sm:py-20 md:py-24">
           <div className="max-w-2xl">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-primary">Apa kata pengguna</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">Apa kata pengguna</p>
             <h2 className="mt-3 font-semibold text-[28px] leading-[1.1] sm:text-4xl md:text-[44px] md:leading-[1.05]">
               Edukasi gizi yang terasa dekat dengan dapur sehari-hari.
             </h2>
@@ -224,7 +224,7 @@ export function HomePage() {
         <div className="mx-auto max-w-[1240px] px-4 py-14 sm:px-6 sm:py-20 md:py-24">
           <div className="grid gap-10 md:grid-cols-12 md:gap-12">
             <div className="md:col-span-5">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-primary">Hubungi Kami</p>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">Hubungi Kami</p>
               <h2 className="mt-3 font-semibold text-[28px] leading-[1.1] sm:text-4xl md:text-[44px] md:leading-[1.05]">Ada pertanyaan atau masukan?</h2>
               <p className="mt-4 text-sm leading-relaxed text-muted-foreground">Kami senang mendengar dari kamu. Isi formulir di samping untuk pertanyaan, saran, atau kerja sama.</p>
             </div>
@@ -296,7 +296,7 @@ const testimonials2 = [
 function TestimonialCard({ name, role, quote, rating }: { name: string; role: string; quote: string; rating: number }) {
   return (
     <figure className="flex w-[320px] flex-shrink-0 flex-col rounded-2xl border border-border bg-card p-5 sm:w-[360px] sm:p-6">
-      <Quote className="h-5 w-5 text-primary/60" strokeWidth={1.8} />
+      <Quote className="h-5 w-5 text-muted-foreground/40" strokeWidth={1.8} />
       <blockquote className="mt-3 flex-1 text-[14px] leading-relaxed text-foreground/85">&ldquo;{quote}&rdquo;</blockquote>
       <div className="mt-5 flex items-center justify-between border-t border-border pt-4">
         <figcaption>
@@ -305,7 +305,7 @@ function TestimonialCard({ name, role, quote, rating }: { name: string; role: st
         </figcaption>
         <div className="flex gap-0.5">
           {Array.from({ length: 5 }).map((_, i) => (
-            <Star key={i} className={i < rating ? "h-3.5 w-3.5 fill-primary text-primary" : "h-3.5 w-3.5 fill-muted-foreground/20 text-muted-foreground/20"} strokeWidth={0} />
+            <Star key={i} className={i < rating ? "h-3.5 w-3.5 fill-foreground/70 text-foreground/70" : "h-3.5 w-3.5 fill-muted-foreground/20 text-muted-foreground/20"} strokeWidth={0} />
           ))}
         </div>
       </div>

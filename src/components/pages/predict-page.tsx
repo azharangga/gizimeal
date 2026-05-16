@@ -81,7 +81,7 @@ export function PredictPage() {
                 { step: "3", label: "Dapat rekomendasi menu" },
               ].map((s, i) => (
                 <div key={s.step} className="flex items-center gap-2.5">
-                  <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
+                  <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border border-border bg-secondary text-xs font-semibold text-foreground">
                     {s.step}
                   </span>
                   <span className="text-xs text-muted-foreground sm:text-sm">{s.label}</span>
@@ -115,10 +115,10 @@ export function PredictPage() {
               <Card className="overflow-hidden border-border shadow-sm">
                 <div className="flex items-center justify-between border-b border-border bg-secondary/30 px-5 py-3 sm:px-6">
                   <div className="flex items-center gap-2">
-                    <Camera className="h-4 w-4 text-primary" />
+                    <Camera className="h-4 w-4 text-muted-foreground" />
                     <p className="text-sm font-semibold">Unggah Foto Bahan</p>
                   </div>
-                  <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-semibold text-primary">
+                  <span className="rounded-full border border-border bg-secondary px-2.5 py-0.5 text-[11px] font-semibold text-foreground">
                     {files.length} / 15
                   </span>
                 </div>
@@ -166,7 +166,7 @@ export function PredictPage() {
                 <Card className="border-border shadow-sm">
                   <CardContent className="p-5 sm:p-6">
                     <div className="flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-primary" />
+                      <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
                       <p className="text-sm font-semibold">Bahan yang Didukung</p>
                     </div>
                     <p className="mt-1.5 text-xs text-muted-foreground">
@@ -181,25 +181,25 @@ export function PredictPage() {
                 <Card className="border-border shadow-sm">
                   <CardContent className="p-5 sm:p-6">
                     <div className="flex items-center gap-2">
-                      <Lightbulb className="h-4 w-4 text-primary" />
+                      <Lightbulb className="h-4 w-4 text-muted-foreground" />
                       <p className="text-sm font-semibold">Tips Foto yang Baik</p>
                     </div>
                     <Separator className="my-4" />
                     <ul className="space-y-2.5 text-sm text-muted-foreground">
                       <li className="flex items-start gap-2.5">
-                        <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
+                        <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-border" />
                         Pencahayaan terang dan merata
                       </li>
                       <li className="flex items-start gap-2.5">
-                        <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
+                        <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-border" />
                         Satu jenis bahan per gambar untuk hasil optimal
                       </li>
                       <li className="flex items-start gap-2.5">
-                        <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
+                        <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-border" />
                         Latar belakang polos memudahkan deteksi
                       </li>
                       <li className="flex items-start gap-2.5">
-                        <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
+                        <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-border" />
                         Pastikan bahan terlihat jelas dan tidak tertutup
                       </li>
                     </ul>

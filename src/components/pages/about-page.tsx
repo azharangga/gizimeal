@@ -122,14 +122,14 @@ export function AboutPage() {
                 transition={{ duration: 0.45, delay: idx * 0.06 }}
                 className="bg-card p-7"
               >
-                <span className="flex h-9 w-9 items-center justify-center rounded-md bg-primary/10 text-primary">
+                <span className="flex h-9 w-9 items-center justify-center rounded-md bg-secondary text-muted-foreground">
                   <Icon className="h-4 w-4" strokeWidth={1.8} />
                 </span>
                 <h3 className="mt-5 text-xl font-semibold">{title}</h3>
                 <ul className="mt-4 space-y-2.5 text-sm text-foreground/85">
                   {items.map((it) => (
                     <li key={it} className="flex items-start gap-2.5">
-                      <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-primary" />
+                      <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-muted-foreground" />
                       <span>{it}</span>
                     </li>
                   ))}
@@ -139,7 +139,7 @@ export function AboutPage() {
           </div>
 
           <div className="mt-16">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-primary">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
               Alur Sistem
             </p>
             <h2 className="mt-3 text-2xl font-semibold leading-tight sm:text-3xl md:text-4xl">
@@ -148,17 +148,17 @@ export function AboutPage() {
 
             <ol className="mt-8 grid gap-3 md:grid-cols-5">
               {[
-                "Pengguna mengunggah gambar bahan",
-                "Frontend mengirim gambar ke REST API",
-                "Backend menjalankan model klasifikasi",
-                "API mengirim hasil prediksi & rekomendasi",
-                "Hasil ditampilkan di halaman berikutnya",
+                "Kamu foto bahan makanan yang ada di dapur",
+                "Foto dikirim ke sistem GiziMeal untuk dianalisis",
+                "Sistem mengenali jenis bahan dari foto",
+                "GiziMeal menyiapkan rekomendasi menu untukmu",
+                "Hasil deteksi dan menu langsung tampil di layar",
               ].map((step, i) => (
                 <li
                   key={step}
                   className="rounded-xl border border-border bg-card p-5"
                 >
-                  <span className="text-sm font-semibold text-primary tnum">
+                  <span className="text-sm font-semibold text-muted-foreground tnum">
                     0{i + 1}
                   </span>
                   <p className="mt-3 text-sm leading-relaxed">{step}</p>
@@ -169,7 +169,7 @@ export function AboutPage() {
 
           <div className="mt-16">
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-primary">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
                 Tim Pengembang
               </p>
               <h2 className="mt-3 text-2xl font-semibold leading-tight sm:text-3xl md:text-4xl">

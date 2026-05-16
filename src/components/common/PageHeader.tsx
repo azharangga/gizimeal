@@ -21,7 +21,7 @@ export function PageHeader({
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="text-[11px] font-semibold uppercase tracking-[0.22em] text-primary"
+          className="text-[11px] font-semibold uppercase tracking-[0.22em] text-muted-foreground"
         >
           {eyebrow}
         </motion.p>

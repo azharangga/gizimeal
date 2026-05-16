@@ -136,7 +136,7 @@ export function ResultPage() {
 
           <div className="mt-4 grid items-center gap-8 md:grid-cols-12">
             <div className="md:col-span-7">
-              <p className="text-xs font-semibold uppercase tracking-wider text-primary">
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Hasil Deteksi
               </p>
               <h1 className="mt-3 text-2xl leading-tight tracking-tight sm:text-3xl md:text-4xl">
@@ -164,7 +164,7 @@ export function ResultPage() {
 
                     {/* Info */}
                     <div className="min-w-0 flex-1 space-y-1">
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-primary">
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                         Bahan Terdeteksi
                       </p>
                       <p className="text-2xl font-semibold capitalize leading-tight">
@@ -186,7 +186,7 @@ export function ResultPage() {
         <div className="mx-auto max-w-[1240px] px-4 py-10 sm:px-6 sm:py-12 md:py-16">
           {data.mode === "multi" && (
             <div className="mb-10">
-              <p className="text-xs font-semibold uppercase tracking-wider text-primary">
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Hasil Deteksi
               </p>
               <h2 className="mt-2 text-2xl font-semibold">
@@ -232,7 +232,7 @@ export function ResultPage() {
             <FadeUp className="mt-2">
               <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
                 <div className="max-w-xl">
-                  <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary">
+                  <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                     Rekomendasi Menu
                   </p>
                   <h2 className="mt-2 text-2xl font-semibold leading-tight sm:text-3xl">
