@@ -99,12 +99,12 @@ export function HomePage() {
         <div className="mx-auto max-w-[1240px] px-4 py-14 sm:px-6 sm:py-20 md:py-28">
           <div className="grid gap-10 md:grid-cols-12">
             <div className="md:col-span-4">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">Empat Pilar Layanan</p>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] muted-foreground">Empat Pilar Layanan</p>
               <h2 className="mt-3 font-semibold text-[28px] leading-[1.1] sm:text-4xl md:text-[44px] md:leading-[1.05]">
                 Pendekatan sederhana untuk gizi seimbang sehari-hari.
               </h2>
               <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-                Setiap modul mengikuti alur yang mudah dipahami: identifikasi bahan, perhitungan kebutuhan, penyusunan menu, dan edukasi pendukung.
+                Setiap modul mengikuti alur yang mudah dipahami yaitu identifikasi bahan, perhitungan kebutuhan, penyusunan menu, dan edukasi pendukung.
               </p>
             </div>
             <div className="md:col-span-8">

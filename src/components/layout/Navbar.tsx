@@ -124,7 +124,7 @@ export function Navbar() {
                     key={l.to}
                     href={l.to}
                     onClick={() => setOpen(false)}
-                    className={`rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-secondary hover:text-foreground ${isActive(l.to) ? "bg-secondary text-foreground" : ""}`}
+                    className={`rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-secondary hover:text-foreground ${isActive(l.to) ? "bg-primary/10 text-primary font-semibold" : ""}`}
                   >
                     {l.label}
                   </Link>

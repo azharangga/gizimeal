@@ -322,12 +322,18 @@ export function ReferencesPage() {
 
       <FormulasSection />
 
-      <div className="mt-16 rounded-xl border border-border-soft bg-[var(--surface-alt)] p-6">
+      <aside
+        role="note"
+        aria-label="Catatan sitasi"
+        className="mt-16 rounded-lg border border-border-soft bg-[var(--surface-warm)]/40 p-4"
+      >
         <div className="flex items-start gap-3">
-          <BookOpen className="mt-0.5 h-4 w-4 text-muted-foreground" />
-          <div className="text-sm leading-relaxed text-muted-foreground">
+          <span className="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-background ring-1 ring-border">
+            <BookOpen className="h-3.5 w-3.5 text-foreground/70" />
+          </span>
+          <div className="text-sm leading-relaxed text-foreground/80">
             <p className="font-semibold text-foreground">Catatan sitasi</p>
-            <p className="mt-1">
+            <p className="mt-1 text-muted-foreground">
               Daftar di atas merupakan referensi utama. Untuk publikasi akademik
               atau penggunaan profesional, mohon merujuk langsung ke dokumen sumber
               terbaru yang dikeluarkan oleh Kementerian Kesehatan RI atau
@@ -335,7 +341,7 @@ export function ReferencesPage() {
             </p>
           </div>
         </div>
-      </div>
+      </aside>
 
       <div className="mt-10">
         <MedicalDisclaimer />
