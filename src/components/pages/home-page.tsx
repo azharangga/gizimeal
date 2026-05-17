@@ -20,7 +20,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/lib/auth";
-import heroIngredients from "@/assets/hero-ingredients.jpg";
+import heroIngredients from "@/assets/hero.png";
 
 export function HomePage() {
   return (
