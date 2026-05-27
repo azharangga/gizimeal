@@ -26,6 +26,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useAuth } from "@/lib/auth";
 import { useMemo, useState } from "react";
 import { AuthBrandPanel } from "@/components/auth/AuthBrandPanel";
+import { Turnstile } from "react-turnstile";
 
 const schema = z
   .object({
@@ -67,6 +68,7 @@ export function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
   const {
     register,
@@ -317,10 +319,19 @@ export function RegisterPage() {
                 <p className="-mt-2 text-xs text-destructive">{errors.terms.message as string}</p>
               )}
 
+              <Turnstile
+                sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+                onVerify={(token) => setTurnstileToken(token)}
+                onExpire={() => setTurnstileToken(null)}
+                theme="auto"
+                appearance="always"
+                size="flexible"
+              />
+
               <Button
                 type="submit"
                 className="h-11 w-full bg-primary text-primary-foreground hover:bg-[var(--primary-hover)]"
-                disabled={loading}
+                disabled={loading || !turnstileToken}
               >
                 {loading ? (
                   <>

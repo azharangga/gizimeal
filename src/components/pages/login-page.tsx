@@ -15,6 +15,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useAuth } from "@/lib/auth";
 import { useState } from "react";
 import { AuthBrandPanel } from "@/components/auth/AuthBrandPanel";
+import { Turnstile } from "react-turnstile";
 
 const schema = z.object({
   email: z.string().trim().min(1, "Email wajib diisi").email("Format email tidak valid").max(255, "Email terlalu panjang"),
@@ -29,6 +30,7 @@ export function LoginPage() {
   const { login } = useAuth();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
   const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -95,7 +97,15 @@ export function LoginPage() {
                 <Checkbox checked={!!remember} onCheckedChange={(c) => setValue("remember", c === true)} />
                 <span>Ingat saya di perangkat ini</span>
               </label>
-              <Button type="submit" className="h-11 w-full bg-primary text-primary-foreground hover:bg-[var(--primary-hover)]" disabled={loading}>
+              <Turnstile
+                sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+                onVerify={(token) => setTurnstileToken(token)}
+                onExpire={() => setTurnstileToken(null)}
+                theme="auto"
+                appearance="always"
+                size="flexible"
+              />
+              <Button type="submit" className="h-11 w-full bg-primary text-primary-foreground hover:bg-[var(--primary-hover)]" disabled={loading || !turnstileToken}>
                 {loading ? (<><Loader2 className="mr-2 h-4 w-4 animate-spin" />Memproses…</>) : (<>Masuk Sekarang<ArrowRight className="ml-2 h-4 w-4" /></>)}
               </Button>
             </form>

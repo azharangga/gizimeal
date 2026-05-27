@@ -100,9 +100,11 @@ export function Navbar() {
                   <p className="text-xs text-muted-foreground">{user?.email}</p>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => router.push("/account")}>
-                  <User className="mr-2 h-4 w-4" />
-                  Kelola Akun
+                <DropdownMenuItem asChild>
+                  <Link href="/account">
+                    <User className="mr-2 h-4 w-4" />
+                    Kelola Akun
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:bg-destructive/10 focus:text-destructive">
@@ -160,9 +162,11 @@ export function Navbar() {
                       )}
                       <span className="truncate">{user?.name}</span>
                     </div>
-                    <Button variant="outline" className="mt-2" onClick={() => { router.push("/account"); setOpen(false); }}>
-                      <User className="mr-2 h-4 w-4" />
-                      Kelola Akun
+                    <Button variant="outline" className="mt-2" asChild>
+                      <Link href="/account" onClick={() => setOpen(false)}>
+                        <User className="mr-2 h-4 w-4" />
+                        Kelola Akun
+                      </Link>
                     </Button>
                     <Button variant="outline" className="mt-2" onClick={handleLogout}>
                       <LogOut className="mr-2 h-4 w-4" />

@@ -24,6 +24,7 @@ import { ClassesGrid } from "@/components/prediction/ClassesGrid";
 import { checkHealth, predictFoods } from "@/lib/api";
 import { savePrediction } from "@/lib/predict-store";
 import { toast } from "sonner";
+import { useAuthGate } from "@/components/common/AuthGate";
 
 export function PredictPage() {
   const router = useRouter();
@@ -31,6 +32,7 @@ export function PredictPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [modelReady, setModelReady] = useState<boolean | null>(null);
+  const { gate, LoginPrompt } = useAuthGate();
 
   useEffect(() => {
     checkHealth()
@@ -123,7 +125,7 @@ export function PredictPage() {
                   </span>
                 </div>
                 <CardContent className="p-4 sm:p-6">
-                  <FileUpload files={files} onChange={setFiles} />
+                  <FileUpload files={files} onChange={(f) => { if (!gate()) return; setFiles(f); }} />
                 </CardContent>
 
                 {/* Action bar */}
@@ -211,6 +213,7 @@ export function PredictPage() {
           )}
         </div>
       </section>
+      <LoginPrompt />
     </>
   );
 }

@@ -26,19 +26,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import {
   Dialog,
   DialogContent,
+  DialogDescription,
+  DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useAuth } from "@/lib/auth";
@@ -89,6 +80,7 @@ export function AccountPage() {
   const [savingProfile, setSavingProfile] = useState(false);
   const [savingPassword, setSavingPassword] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -766,37 +758,10 @@ export function AccountPage() {
               <p className="text-sm text-muted-foreground leading-relaxed">
                 Setelah akun dihapus, semua data termasuk riwayat aktivitas akan hilang secara permanen. Pastikan kamu sudah menyimpan informasi yang diperlukan sebelum melanjutkan.
               </p>
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button size="sm" className="h-9 bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                    <Trash2 className="mr-2 h-3.5 w-3.5" />
-                    Hapus Akun Saya
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Hapus akun secara permanen?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Semua data akun kamu akan dihapus dan tidak dapat dipulihkan. Apakah kamu yakin ingin melanjutkan?
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Batal</AlertDialogCancel>
-                    <AlertDialogAction
-                      onClick={onDeleteAccount}
-                      disabled={deleting}
-                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                    >
-                      {deleting ? (
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      ) : (
-                        <Trash2 className="mr-2 h-4 w-4" />
-                      )}
-                      Ya, Hapus Akun
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+              <Button size="sm" className="h-9 bg-destructive text-destructive-foreground hover:bg-destructive/90" onClick={() => setShowDeleteDialog(true)}>
+                <Trash2 className="mr-2 h-3.5 w-3.5" />
+                Hapus Akun Saya
+              </Button>
             </div>
           </div>
         </motion.div>
@@ -829,6 +794,36 @@ export function AccountPage() {
           loading={uploadingAvatar}
         />
       )}
+
+      {/* Delete Account Confirmation */}
+      <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Hapus akun secara permanen?</DialogTitle>
+            <DialogDescription>
+              Semua data akun kamu akan dihapus dan tidak dapat dipulihkan. Apakah kamu yakin ingin melanjutkan?
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-2 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+            <Button variant="outline" size="sm" onClick={() => setShowDeleteDialog(false)} disabled={deleting}>
+              Batal
+            </Button>
+            <Button
+              size="sm"
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onClick={onDeleteAccount}
+              disabled={deleting}
+            >
+              {deleting ? (
+                <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
+              ) : (
+                <Trash2 className="mr-2 h-3.5 w-3.5" />
+              )}
+              Ya, Hapus Akun
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
