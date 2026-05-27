@@ -51,6 +51,27 @@ export function PredictPage() {
     try {
       const data = await predictFoods(files);
       savePrediction(data);
+
+      // Save to history (fire and forget)
+      const historyPayload = {
+        mode: data.mode,
+        detected_items: data.mode === "single"
+          ? [{ name: data.prediction.detected_item, confidence: data.prediction.confidence_score }]
+          : data.per_image_predictions
+              .filter((p) => p.detected_item && !p.error)
+              .map((p) => ({ name: p.detected_item!, confidence: p.confidence_score ?? 0 })),
+        total_images: data.mode === "single" ? 1 : data.total_images,
+        menu_recommendations: data.menu_recommendations.map((m) => ({
+          menu_name: m.menu_name,
+          score_akg: m.score_akg,
+        })),
+      };
+      fetch("/api/history", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(historyPayload),
+      }).catch(() => {});
+
       toast.success("Deteksi berhasil", {
         id: tId,
         description: "Hasil deteksi sedang dimuat.",

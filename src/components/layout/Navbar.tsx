@@ -23,6 +23,7 @@ import Image from "next/image";
 const links = [
   { to: "/", label: "Beranda" },
   { to: "/predict", label: "Deteksi Bahan" },
+  { to: "/history", label: "Riwayat" },
   { to: "/calculator", label: "Kalkulator Gizi" },
   { to: "/foods", label: "Data Makanan" },
   { to: "/chatbot", label: "Asisten" },
