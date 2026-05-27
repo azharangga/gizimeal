@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { FoodsPage } from "@/components/pages/foods-page";
 
 export const metadata: Metadata = {
-  title: "Database Nutrisi - GiziMeal",
+  title: "Data Makanan - GiziMeal",
   description: "Cari informasi gizi makanan berdasarkan nama menu atau bahan.",
 };
 

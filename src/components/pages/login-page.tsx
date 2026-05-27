@@ -40,12 +40,16 @@ export function LoginPage() {
 
   const onSubmit = async (data: FormValues) => {
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 600));
-    const name = data.email.split("@")[0] || "Pengguna";
-    login({ name, email: data.email });
-    toast.success("Berhasil masuk", { description: `Selamat datang kembali, ${name}.` });
+    const { error } = await login(data.email, data.password);
+    if (error) {
+      toast.error("Gagal masuk", { description: error });
+      setLoading(false);
+      return;
+    }
+    toast.success("Berhasil masuk", { description: "Selamat datang kembali!" });
     setLoading(false);
     router.push("/");
+    router.refresh();
   };
 
   return (

@@ -22,10 +22,10 @@ export function Footer() {
             </p>
             <ul className="mt-4 space-y-2.5 text-sm text-foreground/80">
               <li><Link href="/predict" className="hover:text-foreground">Deteksi Bahan</Link></li>
-              <li><Link href="/foods" className="hover:text-foreground">Database Gizi</Link></li>
-              <li><Link href="/calculator" className="hover:text-foreground">Kalkulator AKG</Link></li>
-              <li><Link href="/chatbot" className="hover:text-foreground">Edukasi Gizi</Link></li>
-              <li><Link href="/referensi" className="hover:text-foreground">Referensi Ilmiah</Link></li>
+              <li><Link href="/calculator" className="hover:text-foreground">Kalkulator Gizi</Link></li>
+              <li><Link href="/foods" className="hover:text-foreground">Data Makanan</Link></li>
+              <li><Link href="/chatbot" className="hover:text-foreground">Asisten</Link></li>
+              <li><Link href="/referensi" className="hover:text-foreground">Referensi</Link></li>
               <li><Link href="/faq" className="hover:text-foreground">FAQ</Link></li>
               <li><Link href="/about" className="hover:text-foreground">Tentang Kami</Link></li>
             </ul>

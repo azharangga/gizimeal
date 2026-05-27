@@ -13,7 +13,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
         <TopProgressBar />
       </Suspense>
       {children}
-      <Toaster position="top-right" richColors closeButton />
+      <Toaster position="top-right" richColors duration={3000} />
       <FloatingChat />
     </AuthProvider>
   );

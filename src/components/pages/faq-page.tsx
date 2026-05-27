@@ -108,7 +108,7 @@ export function FaqPage() {
       <section className="border-b border-border bg-secondary/40">
         <div className="mx-auto max-w-[1240px] px-4 pt-10 pb-10 sm:px-6 sm:pt-14 sm:pb-12 md:pt-20 md:pb-16">
           <PageHeader
-            eyebrow="Pertanyaan Umum"
+            eyebrow="FAQ"
             title="Hal yang sering ditanyakan."
             lead="Ringkasan penjelasan singkat seputar cara kerja, sumber data, dan batasan layanan GiziMeal."
           />

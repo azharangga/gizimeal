@@ -22,27 +22,28 @@ import Image from "next/image";
 
 const links = [
   { to: "/", label: "Beranda" },
-  { to: "/about", label: "Tentang" },
-  { to: "/predict", label: "Deteksi" },
-  { to: "/calculator", label: "Kalkulator" },
-  { to: "/foods", label: "Database Gizi" },
-  { to: "/chatbot", label: "Edukasi" },
+  { to: "/predict", label: "Deteksi Bahan" },
+  { to: "/calculator", label: "Kalkulator Gizi" },
+  { to: "/foods", label: "Data Makanan" },
+  { to: "/chatbot", label: "Asisten" },
   { to: "/referensi", label: "Referensi" },
   { to: "/faq", label: "FAQ" },
+  { to: "/about", label: "Tentang Kami" },
 ] as const;
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, isLoading, logout } = useAuth();
   const { toggle } = useTheme();
   const router = useRouter();
   const pathname = usePathname();
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     toast.success("Berhasil keluar", { description: "Sampai jumpa lagi." });
     setOpen(false);
     router.push("/");
+    router.refresh();
   };
 
   const isActive = (to: string) => {
@@ -80,11 +81,17 @@ export function Navbar() {
             <Sun className="h-4 w-4 rotate-0 scale-100 transition-transform dark:rotate-90 dark:scale-0" />
             <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-transform dark:rotate-0 dark:scale-100" />
           </Button>
-          {isAuthenticated ? (
+          {isLoading ? (
+            <div className="h-9 w-9 rounded-full bg-secondary/60" />
+          ) : isAuthenticated ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-secondary/60 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground" aria-label="Menu profil">
-                  <User className="h-4 w-4" />
+                <button className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full border border-border bg-secondary/60 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground" aria-label="Menu profil">
+                  {user?.avatarUrl ? (
+                    <img src={user.avatarUrl} alt={user.name} className="h-full w-full object-cover" />
+                  ) : (
+                    <User className="h-4 w-4" />
+                  )}
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-64">
@@ -92,6 +99,11 @@ export function Navbar() {
                   <p className="text-sm font-semibold">{user?.name}</p>
                   <p className="text-xs text-muted-foreground">{user?.email}</p>
                 </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => router.push("/account")}>
+                  <User className="mr-2 h-4 w-4" />
+                  Kelola Akun
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:bg-destructive/10 focus:text-destructive">
                   <LogOut className="mr-2 h-4 w-4" />
@@ -138,12 +150,20 @@ export function Navbar() {
                   <span className="dark:hidden">Mode Gelap</span>
                   <span className="hidden dark:inline">Mode Terang</span>
                 </button>
-                {isAuthenticated ? (
+                {isLoading ? null : isAuthenticated ? (
                   <>
                     <div className="mt-3 flex items-center gap-2 rounded-md border border-border bg-secondary/60 px-3 py-2 text-sm">
-                      <User className="h-4 w-4" />
+                      {user?.avatarUrl ? (
+                        <img src={user.avatarUrl} alt={user.name} className="h-6 w-6 rounded-full object-cover" />
+                      ) : (
+                        <User className="h-4 w-4" />
+                      )}
                       <span className="truncate">{user?.name}</span>
                     </div>
+                    <Button variant="outline" className="mt-2" onClick={() => { router.push("/account"); setOpen(false); }}>
+                      <User className="mr-2 h-4 w-4" />
+                      Kelola Akun
+                    </Button>
                     <Button variant="outline" className="mt-2" onClick={handleLogout}>
                       <LogOut className="mr-2 h-4 w-4" />
                       Keluar

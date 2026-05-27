@@ -10,7 +10,6 @@ import {
   CheckCircle2,
   ClipboardList,
   HeartPulse,
-  LogIn,
   Quote,
   ScanSearch,
   ScrollText,
@@ -60,8 +59,8 @@ export function HomePage() {
             <div className="mt-8 grid max-w-lg grid-cols-3 gap-4 border-t border-border pt-6 sm:gap-6 md:mt-10">
               {[
                 { k: 15, suffix: "", v: "Bahan terklasifikasi" },
-                { k: 500, suffix: "+", v: "Item komposisi pangan" },
-                { k: 5, suffix: "", v: "referensi resmi" },
+                { k: 400, suffix: "+", v: "Data makanan" },
+                { k: 9, suffix: "", v: "Referensi" },
               ].map((s) => (
                 <div key={s.v}>
                   <AnimatedCounter target={s.k} suffix={s.suffix} />
@@ -261,7 +260,7 @@ function HeroCTA() {
     </Button>
   ) : (
     <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-[var(--primary-hover)]">
-      <Link href="/login"><LogIn className="mr-1.5 h-4 w-4" />Masuk untuk Memulai</Link>
+      <Link href="/predict">Mulai Sekarang <ArrowRight className="ml-1.5 h-4 w-4" /></Link>
     </Button>
   );
 }

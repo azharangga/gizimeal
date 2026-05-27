@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { FaqPage } from "@/components/pages/faq-page";
 
 export const metadata: Metadata = {
-  title: "Pertanyaan Umum - GiziMeal",
+  title: "FAQ - GiziMeal",
   description: "Jawaban atas pertanyaan yang sering diajukan tentang GiziMeal.",
 };
 

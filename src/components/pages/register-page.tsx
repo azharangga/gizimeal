@@ -63,7 +63,7 @@ type FormValues = z.infer<typeof schema>;
 
 export function RegisterPage() {
   const router = useRouter();
-  const { login } = useAuth();
+  const { register: registerUser } = useAuth();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -110,13 +110,18 @@ export function RegisterPage() {
 
   const onSubmit = async (data: FormValues) => {
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 700));
-    login({ name: data.name, email: data.email });
+    const { error } = await registerUser(data.name, data.email, data.password);
+    if (error) {
+      toast.error("Gagal membuat akun", { description: error });
+      setLoading(false);
+      return;
+    }
     toast.success("Akun berhasil dibuat", {
       description: `Selamat datang, ${data.name}!`,
     });
     setLoading(false);
     router.push("/");
+    router.refresh();
   };
 
   return (

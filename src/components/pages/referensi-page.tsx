@@ -283,7 +283,7 @@ export function ReferencesPage() {
       <section className="border-b border-border bg-secondary/40">
         <div className="mx-auto max-w-3xl px-4 pt-10 pb-10 sm:px-6 sm:pt-14 sm:pb-12 md:pt-20 md:pb-16">
           <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
-            Referensi Ilmiah
+            Referensi
           </p>
           <h1 className="mt-3 font-semibold text-[28px] leading-[1.1] sm:text-4xl md:text-5xl md:leading-[1.05]">
             Sumber referensi yang menjadi dasar GiziMeal.

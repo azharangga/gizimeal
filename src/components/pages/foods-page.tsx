@@ -117,7 +117,7 @@ export function FoodsPage() {
       <section className="border-b border-border bg-secondary/40">
         <div className="mx-auto max-w-[1200px] px-4 pt-10 pb-10 sm:px-6 sm:pt-14 sm:pb-12 md:pt-20 md:pb-16">
           <PageHeader
-            eyebrow="Database Gizi"
+            eyebrow="Data Makanan"
             title="Komposisi gizi bahan pangan."
             lead="Pencarian informasi nutrisi dengan dataset awal dari Kaggle yang diverifikasi ulang menggunakan acuan AKG dan Pedoman Gizi Seimbang Kemenkes RI."
           />
