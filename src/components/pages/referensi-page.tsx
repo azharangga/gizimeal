@@ -71,21 +71,39 @@ const INTERNATIONAL: Reference[] = [
 const DATASETS: Reference[] = [
   {
     code: "Kaggle Dataset (Gambar)",
-    title: "Food Image Classification Dataset",
-    publisher: "Kaggle (Open Dataset Community)",
-    year: "2023",
+    title: "Ingredients Bahan Makanan Image Gambar",
+    publisher: "Kaggle, byrux12",
+    year: "2024",
     used_for:
-      "Sumber gambar bahan makanan untuk pelatihan model klasifikasi pada fitur Deteksi GiziMeal. Setiap kelas diverifikasi ulang sebelum digunakan.",
-    url: "https://www.kaggle.com/datasets",
+      "Dataset gambar 15 kelas bahan makanan lokal untuk pelatihan model klasifikasi pada fitur Deteksi Bahan GiziMeal.",
+    url: "https://www.kaggle.com/datasets/byrux12/ingredients-bahan-makanan-image-gambar",
   },
   {
-    code: "Kaggle Dataset (CSV Gizi)",
-    title: "Food Nutrition Dataset",
-    publisher: "Kaggle (Open Dataset Community)",
+    code: "Kaggle Dataset (Gambar)",
+    title: "Fruits and Vegetables Image Recognition Dataset",
+    publisher: "Kaggle, Kritik Seth",
+    year: "2020",
+    used_for:
+      "Dataset gambar 36 kelas buah dan sayuran (100 gambar per kelas) untuk memperkaya variasi data pelatihan model klasifikasi bahan makanan.",
+    url: "https://www.kaggle.com/datasets/kritikseth/fruit-and-vegetable-image-recognition",
+  },
+  {
+    code: "Kaggle Dataset (Gambar)",
+    title: "Vegetable Image Dataset",
+    publisher: "Kaggle, M Israk Ahmed",
+    year: "2021",
+    used_for:
+      "Dataset 21.000 gambar dari 15 kelas sayuran (resolusi 224×224) yang dikumpulkan dari kebun dan pasar untuk klasifikasi dan pengenalan sayuran.",
+    url: "https://www.kaggle.com/datasets/misrakahmed/vegetable-image-dataset",
+  },
+  {
+    code: "Kaggle Dataset (CSV)",
+    title: "Foods Nutrition Dataset",
+    publisher: "Kaggle, adarshzolekar",
     year: "2023",
     used_for:
-      "File CSV berisi daftar nama menu makanan beserta kandungan gizinya (energi, karbohidrat, protein, lemak, serat, kalsium). Digunakan sebagai sumber data Database Gizi dan rekomendasi menu, diverifikasi ulang dengan acuan AKG dan Pedoman Gizi Seimbang.",
-    url: "https://www.kaggle.com/datasets",
+      "File CSV berisi daftar nama menu makanan beserta kandungan gizinya (energi, karbohidrat, protein, lemak, serat, kalsium). Digunakan sebagai sumber data Database Makanan dan perhitungan skor AKG.",
+    url: "https://www.kaggle.com/datasets/adarshzolekar/foods-nutrition-dataset",
   },
 ];
 
@@ -115,7 +133,7 @@ function Section({
       <ol className="mt-6 space-y-3">
         {items.map((r, i) => (
           <motion.li
-            key={r.code}
+            key={`${r.code}-${i}`}
             initial={{ opacity: 0, y: 6 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
@@ -227,13 +245,18 @@ function FormulasSection() {
 
         <FormulaCard
           title="Skor AKG Menu"
-          description="Skor relatif kontribusi sebuah menu terhadap Angka Kecukupan Gizi harian. Menggunakan rata-rata persentase pemenuhan tiap zat gizi (energi, protein, lemak, serat, kalsium), dibatasi 100% per zat agar tidak ada zat gizi yang dominan secara berlebihan."
+          description="Skor kesesuaian menu terhadap Angka Kecukupan Gizi per porsi (0–100). Dihitung dengan mengurangi 100 dari total deviasi tertimbang tiap zat gizi terhadap nilai ideal AKG per porsi. Semakin tinggi skor, semakin seimbang gizinya."
           equations={[
             {
               math:
-                "Skor_{AKG} = \\frac{1}{n}\\sum_{i=1}^{n} \\min\\!\\left(\\frac{N_i}{AKG_i},\\,1\\right) \\times 100\\%",
+                "Skor_{AKG} = \\max\\!\\left(0,\\; 100 - \\sum_{i=1}^{n} D_i \\right)",
+            },
+            {
+              math:
+                "D_i = \\frac{|\\,\\text{Nilai}_i - \\text{AKG}_i\\,|}{\\text{AKG}_i} \\times W_i",
             },
           ]}
+          extra="Bobot (W): Energi = 20, Protein = 30, Lemak = 15, Serat = 20, Kalsium = 15. AKG per porsi dihitung dari rata-rata kebutuhan dewasa L/P (Permenkes No. 28/2019) dibagi 3 kali makan."
         />
       </div>
     </section>
@@ -316,7 +339,7 @@ export function ReferencesPage() {
       <Section
         icon={Database}
         title="Dataset Pelatihan Model"
-        caption="Sumber data gambar yang digunakan untuk melatih model klasifikasi bahan makanan, telah diverifikasi ulang dengan acuan AKG & Pedoman Gizi Seimbang."
+        caption="Sumber data gambar dan nutrisi yang digunakan untuk melatih model klasifikasi dan menyusun database makanan GiziMeal."
         items={DATASETS}
       />
 
