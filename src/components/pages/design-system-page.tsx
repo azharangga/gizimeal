@@ -95,7 +95,7 @@ export function DesignSystemPage() {
               Panduan Visual GiziMeal
             </h1>
             <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-[15px] md:text-base">
-              Dokumentasi lengkap sistem desain visual mencakup tipografi, palet warna, spacing, radius, dan aturan penerapan di seluruh halaman.
+              Dokumentasi lengkap sistem desain visual mencakup typography, color palette, spacing, radius, dan aturan penerapan di seluruh halaman.
             </p>
           </header>
         </div>
