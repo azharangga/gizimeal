@@ -11,7 +11,7 @@ export function FloatingChat() {
   const [fullscreen, setFullscreen] = useState(false);
   const pathname = usePathname();
 
-  if (pathname === "/chatbot" || pathname === "/login" || pathname === "/register") {
+  if (pathname === "/chatbot" || pathname === "/login" || pathname === "/register" || pathname === "/docs") {
     return null;
   }
 

@@ -1,0 +1,531 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "GiziMeal API",
+    "description": "REST API untuk platform edukasi gizi GiziMeal. Mencakup endpoint deteksi bahan makanan, kalkulator gizi, database makanan, dan manajemen akun.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "GiziMeal Team (CC26-PSU393)"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api",
+      "description": "Development"
+    }
+  ],
+  "tags": [
+    { "name": "Health", "description": "Status server dan model" },
+    { "name": "Predict", "description": "Deteksi bahan makanan dari gambar" },
+    { "name": "Foods", "description": "Database makanan dan nutrisi" },
+    { "name": "Calculator", "description": "Kalkulator BMR & TDEE" },
+    { "name": "Classes", "description": "Daftar kelas bahan yang dapat dideteksi" },
+    { "name": "History", "description": "Riwayat deteksi (memerlukan autentikasi)" },
+    { "name": "Auth", "description": "Autentikasi dan manajemen akun" }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": ["Health"],
+        "summary": "Cek status server",
+        "description": "Mengecek apakah backend ML dan model sudah siap.",
+        "responses": {
+          "200": {
+            "description": "Status server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string", "example": "ok" },
+                    "model_loaded": { "type": "boolean", "example": true },
+                    "dataset_loaded": { "type": "boolean", "example": true },
+                    "total_classes": { "type": "integer", "example": 15 }
+                  }
+                }
+              }
+            }
+          },
+          "503": { "$ref": "#/components/responses/ServiceUnavailable" }
+        }
+      }
+    },
+    "/classes": {
+      "get": {
+        "tags": ["Classes"],
+        "summary": "Daftar kelas bahan makanan",
+        "description": "Mengembalikan daftar semua kelas bahan yang dapat dideteksi oleh model.",
+        "responses": {
+          "200": {
+            "description": "Daftar kelas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "classes": {
+                      "type": "array",
+                      "items": { "type": "string" },
+                      "example": ["apple", "banana", "bean", "brinjal", "cabbage"]
+                    },
+                    "total": { "type": "integer", "example": 15 }
+                  }
+                }
+              }
+            }
+          },
+          "503": { "$ref": "#/components/responses/ServiceUnavailable" }
+        }
+      }
+    },
+    "/predict": {
+      "post": {
+        "tags": ["Predict"],
+        "summary": "Deteksi bahan makanan dari gambar",
+        "description": "Upload satu atau beberapa gambar bahan makanan untuk dideteksi. Mengembalikan bahan terdeteksi beserta rekomendasi menu gizi seimbang.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "files": {
+                    "type": "array",
+                    "items": { "type": "string", "format": "binary" },
+                    "description": "Gambar bahan makanan (JPG/PNG, maks 1MB per file, maks 15 file)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Hasil deteksi",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    { "$ref": "#/components/schemas/PredictionSingleResponse" },
+                    { "$ref": "#/components/schemas/PredictionMultiResponse" }
+                  ]
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "503": { "$ref": "#/components/responses/ServiceUnavailable" }
+        }
+      }
+    },
+    "/foods": {
+      "get": {
+        "tags": ["Foods"],
+        "summary": "Daftar semua makanan",
+        "description": "Mengembalikan daftar makanan beserta informasi nutrisinya.",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": { "type": "integer" },
+            "description": "Jumlah maksimal data yang dikembalikan"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Daftar makanan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/FoodItem" }
+                }
+              }
+            }
+          },
+          "503": { "$ref": "#/components/responses/ServiceUnavailable" }
+        }
+      }
+    },
+    "/foods/search": {
+      "get": {
+        "tags": ["Foods"],
+        "summary": "Cari makanan",
+        "description": "Mencari makanan berdasarkan nama.",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string", "minLength": 2 },
+            "description": "Kata kunci pencarian (minimal 2 karakter)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Hasil pencarian",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/FoodItem" }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "503": { "$ref": "#/components/responses/ServiceUnavailable" }
+        }
+      }
+    },
+    "/calculator/bmr": {
+      "post": {
+        "tags": ["Calculator"],
+        "summary": "Hitung BMR & TDEE",
+        "description": "Menghitung Basal Metabolic Rate (BMR) dan Total Daily Energy Expenditure (TDEE) berdasarkan data pengguna menggunakan persamaan Mifflin-St Jeor.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/BMRRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Hasil perhitungan",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/BMRResponse" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "503": { "$ref": "#/components/responses/ServiceUnavailable" }
+        }
+      }
+    },
+    "/history": {
+      "get": {
+        "tags": ["History"],
+        "summary": "Ambil riwayat deteksi",
+        "description": "Mengembalikan riwayat deteksi milik user yang sedang login (maks 50 terbaru).",
+        "security": [{ "supabaseAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Daftar riwayat",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/HistoryItem" }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "503": { "$ref": "#/components/responses/ServiceUnavailable" }
+        }
+      },
+      "post": {
+        "tags": ["History"],
+        "summary": "Simpan riwayat deteksi",
+        "description": "Menyimpan hasil deteksi ke riwayat user.",
+        "security": [{ "supabaseAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/HistoryCreate" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Berhasil disimpan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "success": { "type": "boolean", "example": true } }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "503": { "$ref": "#/components/responses/ServiceUnavailable" }
+        }
+      },
+      "delete": {
+        "tags": ["History"],
+        "summary": "Hapus riwayat",
+        "description": "Menghapus satu entry riwayat berdasarkan ID.",
+        "security": [{ "supabaseAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" },
+            "description": "ID riwayat yang akan dihapus"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Berhasil dihapus",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "success": { "type": "boolean", "example": true } }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/auth/callback": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "OAuth callback",
+        "description": "Endpoint callback untuk pertukaran kode autentikasi menjadi session.",
+        "parameters": [
+          { "name": "code", "in": "query", "schema": { "type": "string" } },
+          { "name": "next", "in": "query", "schema": { "type": "string", "default": "/" } }
+        ],
+        "responses": {
+          "302": { "description": "Redirect ke halaman tujuan" }
+        }
+      }
+    },
+    "/auth/delete": {
+      "delete": {
+        "tags": ["Auth"],
+        "summary": "Hapus akun",
+        "description": "Menghapus akun user secara permanen beserta semua data terkait (profil, avatar, riwayat).",
+        "security": [{ "supabaseAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Akun berhasil dihapus",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "success": { "type": "boolean", "example": true } }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "500": {
+            "description": "Gagal menghapus",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "supabaseAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Supabase JWT token dari session login"
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "string", "example": "Gagal terhubung ke server" }
+        }
+      },
+      "FoodItem": {
+        "type": "object",
+        "properties": {
+          "Food Items": { "type": "string", "example": "Nasi Goreng" },
+          "Energy kcal": { "type": "number", "example": 250 },
+          "Carbs": { "type": "number", "example": 35.2 },
+          "Protein(g)": { "type": "number", "example": 8.5 },
+          "Fat(g)": { "type": "number", "example": 9.1 },
+          "Fibre(g)": { "type": "number", "example": 1.2 },
+          "Calcium(mg)": { "type": "number", "example": 25 }
+        }
+      },
+      "BMRRequest": {
+        "type": "object",
+        "required": ["gender", "age", "weight", "height", "activity"],
+        "properties": {
+          "gender": { "type": "string", "enum": ["male", "female"], "example": "male" },
+          "age": { "type": "integer", "example": 25 },
+          "weight": { "type": "number", "example": 70 },
+          "height": { "type": "number", "example": 175 },
+          "activity": { "type": "string", "enum": ["sedentary", "light", "moderate", "active", "very_active"], "example": "moderate" }
+        }
+      },
+      "BMRResponse": {
+        "type": "object",
+        "properties": {
+          "bmr": { "type": "number", "example": 1724.5 },
+          "tdee": { "type": "number", "example": 2673 },
+          "activity_factor": { "type": "number", "example": 1.55 }
+        }
+      },
+      "PredictionSingleResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": true },
+          "mode": { "type": "string", "example": "single" },
+          "filename": { "type": "string", "example": "chicken.jpg" },
+          "prediction": {
+            "type": "object",
+            "properties": {
+              "detected_item": { "type": "string", "example": "chicken" },
+              "confidence_score": { "type": "number", "example": 0.95 },
+              "confidence_percent": { "type": "string", "example": "95.00%" },
+              "predicted_kcal": { "type": "number", "example": 239 }
+            }
+          },
+          "menu_recommendations": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/MenuRecommendation" }
+          }
+        }
+      },
+      "PredictionMultiResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": true },
+          "mode": { "type": "string", "example": "multi" },
+          "total_images": { "type": "integer", "example": 3 },
+          "total_processed": { "type": "integer", "example": 3 },
+          "detected_ingredients": {
+            "type": "array",
+            "items": { "type": "string" },
+            "example": ["chicken", "carrot", "potato"]
+          },
+          "menu_recommendations": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/MenuRecommendation" }
+          }
+        }
+      },
+      "MenuRecommendation": {
+        "type": "object",
+        "properties": {
+          "rank": { "type": "integer", "example": 1 },
+          "menu_name": { "type": "string", "example": "Sup Ayam Sayuran" },
+          "matched_ingredients": {
+            "type": "array",
+            "items": { "type": "string" },
+            "example": ["chicken", "carrot"]
+          },
+          "score_akg": { "type": "number", "example": 72.5 },
+          "nutrients": {
+            "type": "object",
+            "properties": {
+              "Energy kcal": { "type": "number", "example": 350 },
+              "Protein(g)": { "type": "number", "example": 25 },
+              "Fat(g)": { "type": "number", "example": 12 },
+              "Fibre(g)": { "type": "number", "example": 4.5 },
+              "Calcium(mg)": { "type": "number", "example": 80 }
+            }
+          }
+        }
+      },
+      "HistoryItem": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "user_id": { "type": "string", "format": "uuid" },
+          "mode": { "type": "string", "enum": ["single", "multi"] },
+          "detected_items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string", "example": "chicken" },
+                "confidence": { "type": "number", "example": 0.95 }
+              }
+            }
+          },
+          "total_images": { "type": "integer", "example": 2 },
+          "menu_recommendations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "menu_name": { "type": "string", "example": "Ayam Goreng" },
+                "score_akg": { "type": "number", "example": 65.3 }
+              }
+            }
+          },
+          "created_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "HistoryCreate": {
+        "type": "object",
+        "required": ["mode", "detected_items", "total_images", "menu_recommendations"],
+        "properties": {
+          "mode": { "type": "string", "enum": ["single", "multi"] },
+          "detected_items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "confidence": { "type": "number" }
+              }
+            }
+          },
+          "total_images": { "type": "integer" },
+          "menu_recommendations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "menu_name": { "type": "string" },
+                "score_akg": { "type": "number" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "Request tidak valid",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Tidak terautentikasi",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" }
+          }
+        }
+      },
+      "ServiceUnavailable": {
+        "description": "Server tidak tersedia",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" }
+          }
+        }
+      }
+    }
+  }
+}
