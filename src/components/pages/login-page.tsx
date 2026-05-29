@@ -48,7 +48,7 @@ export function LoginPage() {
       setLoading(false);
       return;
     }
-    toast.success("Berhasil masuk", { description: "Selamat datang kembali!" });
+    toast.success("Berhasil masuk", { description: "Selamat datang kembali!", duration: 2500 });
     setLoading(false);
     router.push("/");
     router.refresh();

@@ -48,7 +48,7 @@ export function Navbar() {
   const handleLogout = async () => {
     setShowLogoutDialog(false);
     await logout();
-    toast.success("Berhasil keluar", { description: "Sampai jumpa lagi." });
+    toast.success("Berhasil keluar", { description: "Sampai jumpa lagi.", duration: 2000 });
     setOpen(false);
     router.push("/");
     router.refresh();

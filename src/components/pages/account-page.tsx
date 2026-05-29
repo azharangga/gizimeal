@@ -304,7 +304,7 @@ export function AccountPage() {
     if (error) {
       toast.error("Gagal mengubah password", { id: tId, description: error.message });
     } else {
-      toast.success("Password berhasil diubah", { id: tId });
+      toast.success("Password berhasil diubah", { id: tId, duration: 4000 });
       passwordForm.reset();
       await logout();
       router.push("/login");
@@ -325,7 +325,7 @@ export function AccountPage() {
         return;
       }
       await logout();
-      toast.success("Akun berhasil dihapus", { id: tId });
+      toast.success("Akun berhasil dihapus", { id: tId, duration: 4000 });
       router.push("/login");
       router.refresh();
     } catch {

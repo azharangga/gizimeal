@@ -120,6 +120,7 @@ export function RegisterPage() {
     }
     toast.success("Akun berhasil dibuat", {
       description: `Selamat datang, ${data.name}!`,
+      duration: 3000,
     });
     setLoading(false);
     router.push("/");

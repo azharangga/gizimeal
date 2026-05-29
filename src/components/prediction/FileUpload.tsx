@@ -162,7 +162,7 @@ export function FileUpload({
                     type="button"
                     onClick={(e) => { e.stopPropagation(); remove(i); }}
                     aria-label={`Hapus ${f.name}`}
-                    className="absolute right-1 top-1 z-10 flex h-6 w-6 items-center justify-center rounded-md bg-background/90 ring-1 ring-border/60 transition-opacity hover:bg-destructive hover:text-white hover:ring-destructive/60 sm:opacity-0 sm:group-hover:opacity-100"
+                    className="absolute right-1 top-1 z-10 flex h-6 w-6 items-center justify-center rounded-md bg-background/90 ring-1 ring-border/60 transition-colors hover:bg-destructive hover:text-white hover:ring-destructive/60"
                   >
                     <X className="h-3 w-3" />
                   </button>

@@ -145,7 +145,7 @@ export function ChatInterface({ compact = false, showControls = false, onClose, 
     setMessages([]);
     setInput("");
     setStatus("online");
-    toast.success("Percakapan direset");
+    toast.success("Percakapan direset", { duration: 2000 });
   };
 
   const handleLike = (id: string, liked: boolean) => {
