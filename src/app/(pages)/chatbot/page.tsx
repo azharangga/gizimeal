@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { ChatbotPage } from "@/components/pages/chatbot-page";
 
 export const metadata: Metadata = {
-  title: "Asisten - GiziMeal",
+  title: "Asisten AI - GiziMeal",
   description: "Tanyakan informasi umum seputar menu gizi seimbang, kalori, dan pemanfaatan bahan makanan.",
 };
 

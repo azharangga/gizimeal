@@ -133,31 +133,33 @@ export function HistoryPage() {
       <>
         <section className="border-b border-border bg-secondary/40">
           <div className="mx-auto max-w-4xl px-4 pt-10 pb-10 sm:px-6 sm:pt-14 sm:pb-12 md:pt-20 md:pb-16">
-            <Skeleton className="h-3 w-16" />
-            <Skeleton className="mt-3 h-9 w-64 sm:h-10" />
-            <Skeleton className="mt-4 h-4 w-80" />
+            <Skeleton className="h-3 w-14" />
+            <Skeleton className="mt-3 h-9 w-72 sm:h-10" />
+            <Skeleton className="mt-4 h-4 w-96 max-w-full" />
           </div>
         </section>
         <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-10">
           <div className="space-y-3">
-            <div className="mb-6">
-              <Skeleton className="h-4 w-32" />
+            <div className="mb-6 flex items-center justify-between">
+              <Skeleton className="h-4 w-28" />
             </div>
             {[1, 2, 3].map((i) => (
               <div key={i} className="rounded-xl border border-border bg-card p-4 sm:p-5">
                 <div className="flex items-start gap-4">
-                  <Skeleton className="hidden sm:block h-10 w-10 rounded-lg" />
+                  <div className="hidden sm:flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-muted">
+                    <Skeleton className="h-4 w-4" />
+                  </div>
                   <div className="flex-1 min-w-0 space-y-2">
-                    <Skeleton className="h-4 w-40" />
-                    <div className="flex gap-1.5">
+                    <Skeleton className="h-4 w-48" />
+                    <div className="flex flex-wrap gap-1.5">
                       <Skeleton className="h-5 w-20 rounded-md" />
                       <Skeleton className="h-5 w-24 rounded-md" />
                       <Skeleton className="h-5 w-16 rounded-md" />
                     </div>
-                    <div className="flex gap-4 pt-1">
+                    <div className="flex flex-wrap gap-x-4 gap-y-1 pt-1">
                       <Skeleton className="h-3 w-20" />
-                      <Skeleton className="h-3 w-32" />
-                      <Skeleton className="h-3 w-14" />
+                      <Skeleton className="h-3 w-36" />
+                      <Skeleton className="h-3 w-12" />
                     </div>
                   </div>
                   <Skeleton className="h-8 w-8 rounded-md" />
@@ -194,23 +196,25 @@ export function HistoryPage() {
           ) : loading ? (
             <div className="space-y-3">
               <div className="mb-6 flex items-center justify-between">
-                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-4 w-28" />
               </div>
               {[1, 2, 3].map((i) => (
                 <div key={i} className="rounded-xl border border-border bg-card p-4 sm:p-5">
                   <div className="flex items-start gap-4">
-                    <Skeleton className="hidden sm:block h-10 w-10 rounded-lg" />
+                    <div className="hidden sm:flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-muted">
+                      <Skeleton className="h-4 w-4" />
+                    </div>
                     <div className="flex-1 min-w-0 space-y-2">
-                      <Skeleton className="h-4 w-40" />
-                      <div className="flex gap-1.5">
+                      <Skeleton className="h-4 w-48" />
+                      <div className="flex flex-wrap gap-1.5">
                         <Skeleton className="h-5 w-20 rounded-md" />
                         <Skeleton className="h-5 w-24 rounded-md" />
                         <Skeleton className="h-5 w-16 rounded-md" />
                       </div>
-                      <div className="flex gap-4 pt-1">
+                      <div className="flex flex-wrap gap-x-4 gap-y-1 pt-1">
                         <Skeleton className="h-3 w-20" />
-                        <Skeleton className="h-3 w-32" />
-                        <Skeleton className="h-3 w-14" />
+                        <Skeleton className="h-3 w-36" />
+                        <Skeleton className="h-3 w-12" />
                       </div>
                     </div>
                     <Skeleton className="h-8 w-8 rounded-md" />

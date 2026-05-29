@@ -44,7 +44,7 @@ export function CalculatorPage() {
       <section className="border-b border-border bg-secondary/40">
         <div className="mx-auto max-w-3xl px-4 pt-10 pb-10 sm:px-6 sm:pt-14 sm:pb-12 md:pt-20 md:pb-16">
           <PageHeader
-            eyebrow="Kalkulator Gizi"
+            eyebrow="Kalkulator"
             title="Estimasi kebutuhan kalori harian."
             lead="Masukkan data dirimu untuk menghitung BMR dan TDEE berdasarkan persamaan Mifflin-St Jeor dan faktor aktivitas FAO/WHO."
           />

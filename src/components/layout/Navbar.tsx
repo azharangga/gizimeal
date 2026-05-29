@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LogIn, LogOut, Menu, Moon, Sun, User } from "lucide-react";
+import { LogIn, LogOut, Menu, Moon, Sun, User, History } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
@@ -22,14 +22,12 @@ import Image from "next/image";
 
 const links = [
   { to: "/", label: "Beranda" },
-  { to: "/predict", label: "Deteksi Bahan" },
-  { to: "/history", label: "Riwayat" },
-  { to: "/calculator", label: "Kalkulator Gizi" },
-  { to: "/foods", label: "Data Makanan" },
-  { to: "/chatbot", label: "Asisten" },
+  { to: "/about", label: "Tentang Kami" },
+  { to: "/predict", label: "Deteksi" },
+  { to: "/calculator", label: "Kalkulator" },
+  { to: "/foods", label: "Tabel Gizi" },
   { to: "/referensi", label: "Referensi" },
   { to: "/faq", label: "FAQ" },
-  { to: "/about", label: "Tentang Kami" },
 ] as const;
 
 export function Navbar() {
@@ -107,6 +105,12 @@ export function Navbar() {
                     Kelola Akun
                   </Link>
                 </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/history">
+                    <History className="mr-2 h-4 w-4" />
+                    Riwayat
+                  </Link>
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:bg-destructive/10 focus:text-destructive">
                   <LogOut className="mr-2 h-4 w-4" />
@@ -131,9 +135,9 @@ export function Navbar() {
                 <Menu className="h-4 w-4" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-72">
+            <SheetContent side="right" className="flex w-72 flex-col">
               <SheetTitle className="text-lg font-semibold">Menu</SheetTitle>
-              <div className="mt-6 flex flex-col gap-1">
+              <div className="mt-6 flex flex-1 flex-col gap-1">
                 {links.map((l) => (
                   <Link
                     key={l.to}
@@ -144,40 +148,56 @@ export function Navbar() {
                     {l.label}
                   </Link>
                 ))}
-                <button
-                  onClick={toggle}
-                  className="mt-2 flex items-center gap-2 rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-secondary hover:text-foreground"
-                >
-                  <Sun className="h-4 w-4 dark:hidden" />
-                  <Moon className="hidden h-4 w-4 dark:block" />
-                  <span className="dark:hidden">Mode Gelap</span>
-                  <span className="hidden dark:inline">Mode Terang</span>
-                </button>
+
                 {isLoading ? null : isAuthenticated ? (
-                  <>
-                    <div className="mt-3 flex items-center gap-2 rounded-md border border-border bg-secondary/60 px-3 py-2 text-sm">
-                      {user?.avatarUrl ? (
-                        <img src={user.avatarUrl} alt={user.name} className="h-6 w-6 rounded-full object-cover" />
-                      ) : (
-                        <User className="h-4 w-4" />
-                      )}
-                      <span className="truncate">{user?.name}</span>
+                  <div className="mt-4 border-t border-border pt-4">
+                    {/* User info */}
+                    <div className="flex items-center gap-3 px-3 py-2">
+                      <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center overflow-hidden rounded-full border border-border bg-muted">
+                        {user?.avatarUrl ? (
+                          <img src={user.avatarUrl} alt={user.name} className="h-full w-full object-cover" />
+                        ) : (
+                          <span className="text-xs font-semibold text-foreground">
+                            {user?.name?.charAt(0).toUpperCase() ?? "U"}
+                          </span>
+                        )}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-medium">{user?.name}</p>
+                        <p className="truncate text-[11px] text-muted-foreground">{user?.email}</p>
+                      </div>
                     </div>
-                    <Button variant="outline" className="mt-2" asChild>
-                      <Link href="/account" onClick={() => setOpen(false)}>
-                        <User className="mr-2 h-4 w-4" />
+                    {/* Account links */}
+                    <div className="mt-1 flex flex-col gap-0.5">
+                      <Link
+                        href="/account"
+                        onClick={() => setOpen(false)}
+                        className="flex items-center gap-2.5 rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-secondary hover:text-foreground"
+                      >
+                        <User className="h-4 w-4" />
                         Kelola Akun
                       </Link>
-                    </Button>
-                    <Button variant="outline" className="mt-2" onClick={handleLogout}>
-                      <LogOut className="mr-2 h-4 w-4" />
-                      Keluar
-                    </Button>
-                  </>
+                      <Link
+                        href="/history"
+                        onClick={() => setOpen(false)}
+                        className="flex items-center gap-2.5 rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-secondary hover:text-foreground"
+                      >
+                        <History className="h-4 w-4" />
+                        Riwayat
+                      </Link>
+                      <button
+                        onClick={() => { setOpen(false); handleLogout(); }}
+                        className="flex items-center gap-2.5 rounded-md px-3 py-2 text-sm text-destructive hover:bg-destructive/10"
+                      >
+                        <LogOut className="h-4 w-4" />
+                        Keluar
+                      </button>
+                    </div>
+                  </div>
                 ) : (
                   <Button
                     asChild
-                    className="mt-3 bg-primary text-primary-foreground hover:bg-[var(--primary-hover)]"
+                    className="mt-4 bg-primary text-primary-foreground hover:bg-[var(--primary-hover)]"
                     onClick={() => setOpen(false)}
                   >
                     <Link href="/login">
@@ -186,6 +206,24 @@ export function Navbar() {
                     </Link>
                   </Button>
                 )}
+
+                {/* Spacer */}
+                <div className="flex-1" />
+
+                {/* Theme toggle — pinned to bottom */}
+                <div className="border-t border-border pt-3 pb-2">
+                  <button
+                    onClick={toggle}
+                    className="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-secondary hover:text-foreground"
+                  >
+                    <span className="flex items-center gap-2">
+                      <Sun className="h-4 w-4 dark:hidden" />
+                      <Moon className="hidden h-4 w-4 dark:block" />
+                      <span className="dark:hidden">Mode Gelap</span>
+                      <span className="hidden dark:inline">Mode Terang</span>
+                    </span>
+                  </button>
+                </div>
               </div>
             </SheetContent>
           </Sheet>

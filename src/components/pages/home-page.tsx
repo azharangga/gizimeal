@@ -59,8 +59,8 @@ export function HomePage() {
             <div className="mt-8 grid max-w-lg grid-cols-3 gap-4 border-t border-border pt-6 sm:gap-6 md:mt-10">
               {[
                 { k: 15, suffix: "", v: "Bahan terklasifikasi" },
-                { k: 400, suffix: "+", v: "Data makanan" },
-                { k: 9, suffix: "", v: "Referensi" },
+                { k: 400, suffix: "+", v: "Komposisi Pangan" },
+                { k: 9, suffix: "", v: "Referensi Resmi" },
               ].map((s) => (
                 <div key={s.v}>
                   <AnimatedCounter target={s.k} suffix={s.suffix} />
@@ -109,9 +109,9 @@ export function HomePage() {
             <div className="md:col-span-8">
               <div className="grid gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-2">
                 {[
-                  { icon: ScanSearch, title: "Klasifikasi Bahan", body: "Identifikasi bahan mentah dari foto dengan skor akurasi yang transparan.", to: "/predict" },
-                  { icon: HeartPulse, title: "Kalkulator AKG", body: "Hitung kebutuhan kalori harian berdasarkan persamaan Mifflin-St Jeor dan PAL FAO/WHO.", to: "/calculator" },
-                  { icon: ClipboardList, title: "Database Gizi", body: "Informasi nutrisi lengkap per bahan pangan, diverifikasi dengan acuan AKG Kemenkes RI.", to: "/foods" },
+                  { icon: ScanSearch, title: "Deteksi Bahan", body: "Unggah foto bahan makanan dan sistem akan mengenali jenisnya secara otomatis.", to: "/predict" },
+                  { icon: HeartPulse, title: "Kalkulator", body: "Hitung kebutuhan kalori harian berdasarkan persamaan Mifflin-St Jeor dan PAL FAO/WHO.", to: "/calculator" },
+                  { icon: ClipboardList, title: "Tabel Gizi", body: "Informasi nutrisi lengkap per bahan pangan, diverifikasi dengan acuan AKG Kemenkes RI.", to: "/foods" },
                   { icon: Utensils, title: "Rekomendasi Menu", body: "Saran menu gizi seimbang lengkap dengan resep, bahan, dan informasi nutrisi per porsi.", to: "/predict" },
                 ].map(({ icon: Icon, title, body, to }, i) => (
                   <motion.div key={title} initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.4 }} transition={{ duration: 0.4, delay: i * 0.05 }} className="bg-background p-5 sm:p-7">

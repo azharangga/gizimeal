@@ -73,25 +73,52 @@ function ResultSkeleton() {
     <>
       <section className="border-b border-border bg-secondary/40">
         <div className="mx-auto max-w-[1240px] px-4 pt-8 pb-10 sm:px-6 md:pt-14 md:pb-16">
-          <Skeleton className="h-5 w-32" />
+          {/* Back button */}
+          <Skeleton className="h-8 w-36 rounded-md" />
+
           <div className="mt-4 grid items-center gap-8 md:grid-cols-12">
             <div className="md:col-span-7 space-y-3">
-              <Skeleton className="h-3 w-24" />
+              <Skeleton className="h-3 w-20" />
               <Skeleton className="h-9 w-3/4" />
-              <Skeleton className="h-4 w-2/3" />
+              <Skeleton className="h-4 w-full max-w-md" />
             </div>
             <div className="md:col-span-5">
-              <Skeleton className="h-32 w-full rounded-xl" />
+              {/* Confidence card skeleton */}
+              <div className="flex items-center gap-5 rounded-xl border border-border bg-card p-5 sm:p-6">
+                <Skeleton className="h-32 w-32 rounded-full flex-shrink-0" />
+                <div className="h-20 w-px bg-border flex-shrink-0" />
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-2.5 w-24" />
+                  <Skeleton className="h-7 w-32" />
+                  <Skeleton className="h-3 w-20" />
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
       <section>
         <div className="mx-auto max-w-[1240px] px-4 py-10 sm:px-6 sm:py-12 md:py-16">
-          <Skeleton className="h-6 w-48" />
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mb-8 space-y-2">
+            <Skeleton className="h-3 w-28" />
+            <Skeleton className="h-8 w-72" />
+            <Skeleton className="h-4 w-96 max-w-full" />
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, i) => (
-              <Skeleton key={i} className="h-44 w-full rounded-xl" />
+              <div key={i} className="rounded-xl border border-border bg-card p-5 space-y-3">
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-5 w-5 rounded-full" />
+                  <Skeleton className="h-5 w-16 rounded-full" />
+                </div>
+                <Skeleton className="h-5 w-3/4" />
+                <div className="flex flex-wrap gap-1.5">
+                  <Skeleton className="h-5 w-16 rounded-md" />
+                  <Skeleton className="h-5 w-20 rounded-md" />
+                  <Skeleton className="h-5 w-14 rounded-md" />
+                </div>
+                <Skeleton className="h-3 w-full" />
+              </div>
             ))}
           </div>
         </div>

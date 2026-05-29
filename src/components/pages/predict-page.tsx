@@ -14,7 +14,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Skeleton } from "@/components/ui/skeleton";
 import { ErrorAlert } from "@/components/common/ErrorAlert";
 import { MedicalDisclaimer } from "@/components/common/MedicalDisclaimer";
 import { PageHeader } from "@/components/common/PageHeader";
@@ -90,7 +89,7 @@ export function PredictPage() {
       <section className="border-b border-border bg-secondary/40">
         <div className="mx-auto max-w-[1240px] px-4 pt-10 pb-8 sm:px-6 sm:pt-14 sm:pb-10 md:pt-20 md:pb-14">
           <PageHeader
-            eyebrow="Deteksi Bahan"
+            eyebrow="Deteksi"
             title="Foto bahan makananmu, dapatkan rekomendasi menu gizi seimbang."
             lead="Cukup unggah foto bahan yang ada di dapurmu. GiziMeal akan mengenali bahan tersebut dan memberikan rekomendasi menu lengkap dengan informasi gizinya."
           />
@@ -118,9 +117,6 @@ export function PredictPage() {
 
       <section>
         <div className="mx-auto max-w-[1240px] px-4 py-10 sm:px-6 sm:py-12 md:py-16">
-          {modelReady === null ? (
-            <PredictSkeleton />
-          ) : (
           <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
             <SlideInLeft className="lg:col-span-8">
               {modelReady === false && (
@@ -231,56 +227,9 @@ export function PredictPage() {
               </div>
             </SlideInRight>
           </div>
-          )}
         </div>
       </section>
       <LoginPrompt />
     </>
-  );
-}
-
-function PredictSkeleton() {
-  return (
-    <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
-      <div className="lg:col-span-8">
-        <Card className="overflow-hidden">
-          <div className="flex items-center justify-between border-b border-border bg-secondary/40 px-6 py-3">
-            <Skeleton className="h-4 w-28" />
-            <Skeleton className="h-5 w-12 rounded-full" />
-          </div>
-          <CardContent className="p-4 sm:p-6">
-            <Skeleton className="h-48 w-full rounded-xl" />
-          </CardContent>
-          <div className="flex items-center justify-between border-t border-border px-6 py-3">
-            <Skeleton className="h-3 w-40" />
-            <Skeleton className="h-10 w-36 rounded-md" />
-          </div>
-        </Card>
-      </div>
-      <aside className="lg:col-span-4">
-        <div className="space-y-4">
-          <Card>
-            <CardContent className="space-y-3 p-6">
-              <Skeleton className="h-4 w-36" />
-              <Skeleton className="h-3 w-full" />
-              <Separator className="my-4" />
-              <div className="grid grid-cols-3 gap-2">
-                {Array.from({ length: 15 }).map((_, i) => (
-                  <Skeleton key={i} className="h-8 w-full rounded-md" />
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="bg-secondary/40">
-            <CardContent className="space-y-2 p-6">
-              <Skeleton className="h-4 w-32" />
-              <Skeleton className="h-3 w-full" />
-              <Skeleton className="h-3 w-full" />
-              <Skeleton className="h-3 w-3/4" />
-            </CardContent>
-          </Card>
-        </div>
-      </aside>
-    </div>
   );
 }

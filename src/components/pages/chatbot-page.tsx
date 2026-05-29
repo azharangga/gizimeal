@@ -11,7 +11,7 @@ export function ChatbotPage() {
       <section className="border-b border-border bg-secondary/40">
         <div className="mx-auto max-w-4xl px-4 pt-10 pb-8 sm:px-6 sm:pt-12 sm:pb-10 md:pt-16 md:pb-12">
           <PageHeader
-            eyebrow="Asisten"
+            eyebrow="Asisten AI"
             title="Asisten edukasi gizi interaktif."
             lead="Asisten edukasi GiziMeal siap menjawab pertanyaan umum tentang kalori, kebutuhan gizi harian, dan ide menu seimbang berbasis Pedoman Gizi Seimbang."
           />

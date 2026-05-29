@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowUpDown, ChevronLeft, ChevronRight, Database, Search } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -117,7 +116,7 @@ export function FoodsPage() {
       <section className="border-b border-border bg-secondary/40">
         <div className="mx-auto max-w-[1200px] px-4 pt-10 pb-10 sm:px-6 sm:pt-14 sm:pb-12 md:pt-20 md:pb-16">
           <PageHeader
-            eyebrow="Data Makanan"
+            eyebrow="Tabel Gizi"
             title="Komposisi gizi bahan pangan."
             lead="Pencarian informasi nutrisi dengan dataset awal dari Kaggle yang diverifikasi ulang menggunakan acuan AKG dan Pedoman Gizi Seimbang Kemenkes RI."
           />
@@ -194,15 +193,36 @@ export function FoodsPage() {
           </div>
 
           {loading ? (
-            <Card>
-              <CardContent className="p-4">
-                <div className="space-y-2">
+            <div className="overflow-x-auto rounded-xl border border-border bg-card">
+              <table className="w-full caption-bottom text-sm">
+                <thead className="[&_tr]:border-b">
+                  <tr className="border-b transition-colors">
+                    <th className="h-10 w-12 px-2 text-center text-xs font-medium text-muted-foreground">No</th>
+                    <th className="h-10 px-2 text-left text-xs font-medium text-muted-foreground">Food Items</th>
+                    <th className="h-10 px-2 text-left font-mono text-xs font-medium text-muted-foreground whitespace-nowrap">Energi (kcal)</th>
+                    <th className="h-10 px-2 text-left font-mono text-xs font-medium text-muted-foreground whitespace-nowrap">Karbohidrat (g)</th>
+                    <th className="h-10 px-2 text-left font-mono text-xs font-medium text-muted-foreground whitespace-nowrap">Protein (g)</th>
+                    <th className="h-10 px-2 text-left font-mono text-xs font-medium text-muted-foreground whitespace-nowrap">Lemak (g)</th>
+                    <th className="h-10 px-2 text-left font-mono text-xs font-medium text-muted-foreground whitespace-nowrap">Serat (g)</th>
+                    <th className="h-10 px-2 text-left font-mono text-xs font-medium text-muted-foreground whitespace-nowrap">Kalsium (mg)</th>
+                  </tr>
+                </thead>
+                <tbody>
                   {Array.from({ length: 6 }).map((_, i) => (
-                    <Skeleton key={i} className="h-10 w-full" />
+                    <tr key={i} className="border-b transition-colors">
+                      <td className="p-2 text-center"><Skeleton className="mx-auto h-4 w-5" /></td>
+                      <td className="p-2"><Skeleton className="h-4 w-32" /></td>
+                      <td className="p-2"><Skeleton className="h-4 w-12" /></td>
+                      <td className="p-2"><Skeleton className="h-4 w-12" /></td>
+                      <td className="p-2"><Skeleton className="h-4 w-12" /></td>
+                      <td className="p-2"><Skeleton className="h-4 w-12" /></td>
+                      <td className="p-2"><Skeleton className="h-4 w-12" /></td>
+                      <td className="p-2"><Skeleton className="h-4 w-12" /></td>
+                    </tr>
                   ))}
-                </div>
-              </CardContent>
-            </Card>
+                </tbody>
+              </table>
+            </div>
           ) : error ? (
             <ErrorAlert message={error} />
           ) : items.length === 0 ? (

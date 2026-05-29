@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { HistoryPage } from "@/components/pages/history-page";
 
 export const metadata: Metadata = {
-  title: "Riwayat Deteksi - GiziMeal",
+  title: "Riwayat - GiziMeal",
   description: "Lihat riwayat hasil deteksi bahan makanan dan rekomendasi menu.",
 };
 

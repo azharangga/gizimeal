@@ -21,15 +21,19 @@ const groups: { title: string; items: { q: string; a: string }[] }[] = [
     items: [
       {
         q: "Apa itu GiziMeal?",
-        a: "Platform edukasi untuk mengenali bahan makanan, memperkirakan nilai gizinya, dan menyarankan menu gizi seimbang.",
+        a: "GiziMeal adalah platform edukasi gizi yang membantu kamu mengenali bahan makanan dari foto, menghitung kebutuhan kalori harian, dan mendapatkan rekomendasi menu gizi seimbang berdasarkan pedoman resmi Kemenkes RI.",
       },
       {
         q: "Apakah GiziMeal menggantikan ahli gizi atau dokter?",
-        a: "Tidak. Informasi gizi bersifat informatif dan tidak digunakan sebagai acuan medis. Untuk kebutuhan khusus, konsultasikan dengan tenaga kesehatan.",
+        a: "Tidak. Seluruh informasi di GiziMeal bersifat edukatif dan tidak dimaksudkan sebagai pengganti konsultasi medis. Untuk kebutuhan diet khusus atau kondisi kesehatan tertentu, silakan berkonsultasi dengan tenaga kesehatan profesional.",
       },
       {
         q: "Apakah saya perlu membuat akun?",
-        a: "Tidak. Semua fitur bisa digunakan langsung tanpa pendaftaran.",
+        a: "Fitur utama seperti Deteksi, Kalkulator, dan Tabel Gizi bisa digunakan tanpa akun. Namun, untuk menyimpan riwayat deteksi kamu perlu masuk terlebih dahulu.",
+      },
+      {
+        q: "Fitur apa saja yang tersedia di GiziMeal?",
+        a: "GiziMeal memiliki fitur Deteksi Bahan (klasifikasi foto), Kalkulator kebutuhan kalori, Tabel Gizi (database nutrisi 400+ makanan), Rekomendasi Menu gizi seimbang, Riwayat deteksi, dan Asisten AI untuk tanya jawab seputar gizi.",
       },
     ],
   },
@@ -38,49 +42,97 @@ const groups: { title: string; items: { q: string; a: string }[] }[] = [
     items: [
       {
         q: "Bahan apa saja yang dapat dikenali?",
-        a: "15 bahan umum: apple, banana, bean, brinjal, cabbage, carrot, cauliflower, chicken, chilli, corn, cucumber, egg, ginger, onion, dan potato.",
+        a: "Saat ini sistem mendukung 15 jenis bahan: apple, banana, bean, brinjal, cabbage, carrot, cauliflower, chicken, chilli, corn, cucumber, egg, ginger, onion, dan potato.",
+      },
+      {
+        q: "Berapa banyak foto yang bisa diunggah sekaligus?",
+        a: "Kamu bisa mengunggah hingga 15 gambar sekaligus. Format yang didukung adalah JPG dan PNG dengan ukuran maksimal 1 MB per file.",
       },
       {
         q: "Bagaimana cara mendapatkan hasil deteksi yang akurat?",
-        a: "Gunakan foto bahan mentah dengan pencahayaan cukup, latar bersih, dan satu bahan dominan per gambar.",
+        a: "Gunakan foto dengan pencahayaan terang dan merata, latar belakang polos, satu jenis bahan per gambar, dan pastikan bahan terlihat jelas tanpa tertutup objek lain.",
       },
       {
         q: "Mengapa hasil deteksi terkadang kurang tepat?",
-        a: "Pencahayaan, sudut, dan kemiripan bentuk bahan dapat memengaruhi prediksi. Skor akurasi ditampilkan agar Anda bisa menilainya.",
-      },
-    ],
-  },
-  {
-    title: "Kalkulator & Rekomendasi",
-    items: [
-      {
-        q: "Bagaimana kalkulator AKG menghitung kebutuhan kalori?",
-        a: "Memakai persamaan Mifflin–St Jeor untuk BMR, dikalikan faktor aktivitas (PAL) FAO/WHO untuk TDEE harian.",
-      },
-      {
-        q: "Apa arti Score AKG pada rekomendasi menu?",
-        a: "Indikator kesesuaian menu terhadap Angka Kecukupan Gizi rata-rata orang dewasa. Semakin tinggi, semakin seimbang.",
-      },
-      {
-        q: "Apakah rekomendasi menu cocok untuk semua orang?",
-        a: "Rekomendasi bersifat umum dan tidak memperhitungkan alergi, penyakit kronis, kehamilan, atau diet khusus. Informasi gizi bersifat informatif dan tidak digunakan sebagai acuan medis.",
-      },
-    ],
-  },
-  {
-    title: "Sumber Data & Privasi",
-    items: [
-      {
-        q: "Dari mana data gizi diambil?",
-        a: "Merujuk pada Permenkes No. 28/2019 (AKG) dan Pedoman Gizi Seimbang Kemenkes RI, selengkapnya di halaman Referensi.",
+        a: "Faktor seperti pencahayaan kurang, sudut pengambilan foto, kemiripan bentuk antar bahan, atau bahan yang sudah diolah dapat memengaruhi akurasi. Skor kepercayaan ditampilkan agar kamu bisa menilai hasilnya.",
       },
       {
         q: "Apakah foto yang saya unggah disimpan?",
-        a: "Tidak. Foto hanya diproses sesaat untuk prediksi dan tidak disimpan.",
+        a: "Tidak. Foto hanya diproses sesaat untuk keperluan deteksi dan tidak disimpan di server kami.",
+      },
+    ],
+  },
+  {
+    title: "Kalkulator & Rekomendasi Menu",
+    items: [
+      {
+        q: "Bagaimana kalkulator menghitung kebutuhan kalori?",
+        a: "Menggunakan persamaan Mifflin–St Jeor untuk menghitung BMR (Basal Metabolic Rate), kemudian dikalikan faktor aktivitas fisik (PAL) berdasarkan standar FAO/WHO untuk mendapatkan estimasi TDEE harian.",
+      },
+      {
+        q: "Apa arti Score AKG pada rekomendasi menu?",
+        a: "Score AKG menunjukkan seberapa sesuai komposisi gizi menu tersebut terhadap Angka Kecukupan Gizi rata-rata orang dewasa Indonesia. Semakin tinggi skornya, semakin seimbang kandungan gizinya.",
+      },
+      {
+        q: "Apakah rekomendasi menu cocok untuk semua orang?",
+        a: "Rekomendasi bersifat umum untuk orang dewasa sehat. Menu tidak memperhitungkan alergi, penyakit kronis, kehamilan, atau diet khusus. Selalu konsultasikan dengan ahli gizi untuk kebutuhan spesifik.",
+      },
+    ],
+  },
+  {
+    title: "Tabel Gizi & Sumber Data",
+    items: [
+      {
+        q: "Dari mana data gizi diambil?",
+        a: "Data nutrisi bersumber dari dataset yang diverifikasi ulang menggunakan acuan Permenkes No. 28/2019 (AKG) dan Pedoman Gizi Seimbang Kemenkes RI. Selengkapnya bisa dilihat di halaman Referensi.",
+      },
+      {
+        q: "Berapa banyak data makanan yang tersedia?",
+        a: "Saat ini tersedia lebih dari 400 item makanan lengkap dengan informasi energi, karbohidrat, protein, lemak, serat, dan kalsium per sajian.",
+      },
+      {
+        q: "Apakah data gizi bisa berubah?",
+        a: "Ya, data dapat diperbarui seiring tersedianya referensi terbaru dari Kemenkes RI atau sumber ilmiah lainnya.",
+      },
+    ],
+  },
+  {
+    title: "Akun & Privasi",
+    items: [
+      {
+        q: "Bagaimana cara membuat akun?",
+        a: "Klik tombol Masuk di pojok kanan atas, lalu pilih Daftar. Isi nama, email, dan password untuk membuat akun baru.",
+      },
+      {
+        q: "Apakah data pribadi saya aman?",
+        a: "Kami menyimpan informasi dasar akun (nama, email, dan foto profil). Foto bahan makanan yang diunggah untuk deteksi tidak disimpan di server, dan riwayat deteksi hanya bisa diakses oleh pemilik akun.",
+      },
+      {
+        q: "Bagaimana cara menghapus akun?",
+        a: "Masuk ke menu Kelola Akun, scroll ke bagian bawah, dan klik Hapus Akun. Data akan dihapus secara permanen.",
       },
     ],
   },
 ];
+
+// Keyword aliases for smarter search
+const ALIASES: Record<string, string[]> = {
+  foto: ["gambar", "upload", "unggah", "image"],
+  akun: ["account", "login", "masuk", "daftar", "register"],
+  hapus: ["delete", "hilang", "buang"],
+  kalori: ["kcal", "energi", "kalor", "tdee", "bmr"],
+  gizi: ["nutrisi", "nutrition", "akg"],
+  bahan: ["ingredient", "makanan", "food"],
+  menu: ["resep", "rekomendasi", "saran"],
+  password: ["kata sandi", "sandi", "pw"],
+  privasi: ["privacy", "data", "aman", "keamanan"],
+  deteksi: ["klasifikasi", "scan", "prediksi", "kenali"],
+  asisten: ["chatbot", "chat", "ai", "bot"],
+};
+
+function tokenize(text: string): string[] {
+  return text.toLowerCase().replace(/[^a-z0-9\s]/g, "").split(/\s+/).filter(Boolean);
+}
 
 function slug(s: string) {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
@@ -91,13 +143,25 @@ export function FaqPage() {
   const q = query.trim().toLowerCase();
   const filtered = useMemo(() => {
     if (!q) return groups;
+    const rawTokens = tokenize(q);
+    if (rawTokens.length === 0) return groups;
+
     return groups
       .map((g) => ({
         ...g,
-        items: g.items.filter(
-          (it) =>
-            it.q.toLowerCase().includes(q) || it.a.toLowerCase().includes(q),
-        ),
+        items: g.items.filter((it) => {
+          const combined = `${g.title} ${it.q} ${it.a}`;
+          // Every original token (or its alias) must match somewhere
+          return rawTokens.every((rt) => {
+            const relatedTokens = [rt];
+            for (const [key, aliases] of Object.entries(ALIASES)) {
+              if (rt === key || aliases.includes(rt)) {
+                relatedTokens.push(key, ...aliases);
+              }
+            }
+            return relatedTokens.some((t) => combined.toLowerCase().includes(t));
+          });
+        }),
       }))
       .filter((g) => g.items.length > 0);
   }, [q]);
@@ -183,36 +247,37 @@ export function FaqPage() {
               </Accordion>
             </section>
           ))}
+        </FadeUp>
+      </div>
 
-          <div className="mt-6 overflow-hidden rounded-2xl border border-border bg-card p-8">
-            <div className="flex items-start gap-4">
-              <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl border border-border bg-secondary text-muted-foreground">
-                <MessageCircle className="h-5 w-5" strokeWidth={1.8} />
-              </span>
-              <div className="flex-1">
-                <h3 className="text-lg font-semibold">Masih ada pertanyaan?</h3>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Coba asisten edukasi GiziMeal atau hubungi kami langsung.
-                </p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  <Button asChild size="sm">
-                    <Link href="/chatbot">Tanya Asisten</Link>
-                  </Button>
-                  <Button asChild size="sm" variant="outline">
-                    <a href="mailto:halo@gizimeal.id">
-                      <Mail className="mr-1.5 h-3.5 w-3.5" />
-                      Hubungi Kami
-                    </a>
-                  </Button>
-                </div>
-              </div>
+      {/* Full-width CTA section */}
+      <div className="mt-12 overflow-hidden rounded-2xl border border-border bg-card p-8">
+        <div className="flex items-start gap-4">
+          <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl border border-border bg-secondary text-muted-foreground">
+            <MessageCircle className="h-5 w-5" strokeWidth={1.8} />
+          </span>
+          <div className="flex-1">
+            <h3 className="text-lg font-semibold">Masih ada pertanyaan?</h3>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Coba Asisten AI GiziMeal atau hubungi kami langsung.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <Button asChild size="sm">
+                <Link href="/chatbot">Tanya Asisten AI</Link>
+              </Button>
+              <Button asChild size="sm" variant="outline">
+                <a href="mailto:halo@gizimeal.id">
+                  <Mail className="mr-1.5 h-3.5 w-3.5" />
+                  Hubungi Kami
+                </a>
+              </Button>
             </div>
           </div>
+        </div>
+      </div>
 
-          <div className="mt-8">
-            <MedicalDisclaimer />
-          </div>
-        </FadeUp>
+      <div className="mt-8">
+        <MedicalDisclaimer />
       </div>
     </div>
     </>

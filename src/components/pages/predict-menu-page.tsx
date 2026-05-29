@@ -225,17 +225,29 @@ function MenuSkeleton() {
     <>
       <section className="border-b border-border bg-secondary/40">
         <div className="mx-auto max-w-[1240px] px-4 pt-8 pb-12 sm:px-6 md:pt-10 md:pb-14">
-          <Skeleton className="h-5 w-32" />
-          <div className="mt-5 grid items-end gap-8 md:grid-cols-12">
-            <div className="md:col-span-8 space-y-3">
-              <Skeleton className="h-5 w-40" />
-              <Skeleton className="h-10 w-3/4" />
+          {/* Back button */}
+          <Skeleton className="h-8 w-32 rounded-md" />
+
+          <div className="mt-5 grid items-center gap-6 md:grid-cols-12">
+            <div className="md:col-span-7 space-y-3">
+              <div className="flex gap-2">
+                <Skeleton className="h-5 w-32 rounded-full" />
+                <Skeleton className="h-5 w-20 rounded-full" />
+              </div>
+              <Skeleton className="h-8 w-3/4" />
               <Skeleton className="h-4 w-2/3" />
+              <Skeleton className="h-12 w-full max-w-xl" />
             </div>
-            <div className="md:col-span-4 grid grid-cols-2 gap-2">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <Skeleton key={i} className="h-16 w-full rounded-md" />
-              ))}
+            <div className="md:col-span-5">
+              {/* Meta grid skeleton */}
+              <div className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-border">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div key={i} className="flex flex-col gap-1.5 bg-card p-4">
+                    <Skeleton className="h-3 w-12" />
+                    <Skeleton className="h-6 w-16" />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -243,14 +255,70 @@ function MenuSkeleton() {
       <section>
         <div className="mx-auto max-w-[1240px] px-4 py-10 sm:px-6 sm:py-14 md:py-20">
           <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
-            <div className="lg:col-span-4 space-y-4">
-              <Skeleton className="h-64 w-full rounded-xl" />
-              <Skeleton className="h-32 w-full rounded-xl" />
+            {/* Sidebar */}
+            <div className="lg:col-span-4 space-y-6">
+              {/* Ingredients card */}
+              <div className="rounded-xl border border-border bg-card p-6 space-y-4">
+                <Skeleton className="h-5 w-28" />
+                <div className="h-px bg-border" />
+                <div className="space-y-2.5">
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <Skeleton key={i} className="h-4 w-full" />
+                  ))}
+                </div>
+              </div>
+              {/* Tips card */}
+              <div className="rounded-xl border border-border bg-card p-6 space-y-4">
+                <Skeleton className="h-5 w-16" />
+                <div className="h-px bg-border" />
+                <div className="space-y-2.5">
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <Skeleton key={i} className="h-4 w-full" />
+                  ))}
+                </div>
+              </div>
             </div>
-            <div className="lg:col-span-8 space-y-4">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Skeleton key={i} className="h-20 w-full rounded-lg" />
-              ))}
+            {/* Main content */}
+            <div className="lg:col-span-8 space-y-12">
+              {/* Steps section */}
+              <div className="space-y-6">
+                <div className="flex items-center gap-3">
+                  <Skeleton className="h-9 w-9 rounded-md" />
+                  <div className="space-y-1">
+                    <Skeleton className="h-3 w-20" />
+                    <Skeleton className="h-7 w-24" />
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <div key={i} className="flex gap-4 rounded-lg border border-border bg-card p-5">
+                      <Skeleton className="h-8 w-8 rounded-full flex-shrink-0" />
+                      <div className="flex-1 space-y-2 pt-1">
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-3/4" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              {/* Nutrition section */}
+              <div className="space-y-6">
+                <div className="flex items-center gap-3">
+                  <Skeleton className="h-9 w-9 rounded-md" />
+                  <div className="space-y-1">
+                    <Skeleton className="h-3 w-24" />
+                    <Skeleton className="h-7 w-32" />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <div key={i} className="rounded-lg border border-border bg-card p-4 space-y-2">
+                      <Skeleton className="h-2.5 w-12" />
+                      <Skeleton className="h-6 w-10" />
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
