@@ -17,6 +17,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useAuth } from "@/lib/auth";
 import Image from "next/image";
 
@@ -32,12 +39,14 @@ const links = [
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
   const { user, isAuthenticated, isLoading, logout } = useAuth();
   const { toggle } = useTheme();
   const router = useRouter();
   const pathname = usePathname();
 
   const handleLogout = async () => {
+    setShowLogoutDialog(false);
     await logout();
     toast.success("Berhasil keluar", { description: "Sampai jumpa lagi." });
     setOpen(false);
@@ -112,7 +121,7 @@ export function Navbar() {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:bg-destructive/10 focus:text-destructive">
+                <DropdownMenuItem onClick={() => setShowLogoutDialog(true)} className="text-destructive focus:bg-destructive/10 focus:text-destructive">
                   <LogOut className="mr-2 h-4 w-4" />
                   Keluar
                 </DropdownMenuItem>
@@ -186,7 +195,7 @@ export function Navbar() {
                         Riwayat
                       </Link>
                       <button
-                        onClick={() => { setOpen(false); handleLogout(); }}
+                        onClick={() => { setOpen(false); setShowLogoutDialog(true); }}
                         className="flex items-center gap-2.5 rounded-md px-3 py-2 text-sm text-destructive hover:bg-destructive/10"
                       >
                         <LogOut className="h-4 w-4" />
@@ -229,6 +238,30 @@ export function Navbar() {
           </Sheet>
         </div>
       </div>
+
+      {/* Logout confirmation dialog */}
+      <Dialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Keluar dari akun?</DialogTitle>
+            <DialogDescription>
+              Kamu akan keluar dari akun. Riwayat deteksi tetap tersimpan dan bisa diakses kembali setelah masuk.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-2 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+            <Button variant="outline" size="sm" onClick={() => setShowLogoutDialog(false)}>
+              Batal
+            </Button>
+            <Button
+              size="sm"
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onClick={handleLogout}
+            >
+              Ya, Keluar
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </header>
   );
 }

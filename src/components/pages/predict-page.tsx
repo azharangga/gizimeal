@@ -118,7 +118,7 @@ export function PredictPage() {
       <section>
         <div className="mx-auto max-w-[1240px] px-4 py-10 sm:px-6 sm:py-12 md:py-16">
           <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
-            <SlideInLeft className="lg:col-span-8">
+            <SlideInLeft className="lg:col-span-8 flex flex-col">
               {modelReady === false && (
                 <div className="mb-5 flex items-start gap-3 rounded-xl border border-clay/40 bg-clay/5 p-4 text-sm">
                   <CircleAlert className="mt-0.5 h-4 w-4 flex-shrink-0 text-clay" />
@@ -131,7 +131,7 @@ export function PredictPage() {
                 </div>
               )}
 
-              <Card className="overflow-hidden border-border shadow-sm">
+              <Card className="flex flex-1 flex-col overflow-hidden border-border shadow-sm">
                 <div className="flex items-center justify-between border-b border-border bg-secondary/30 px-5 py-3 sm:px-6">
                   <div className="flex items-center gap-2">
                     <Camera className="h-4 w-4 text-muted-foreground" />
@@ -141,7 +141,7 @@ export function PredictPage() {
                     {files.length} / 15
                   </span>
                 </div>
-                <CardContent className="p-4 sm:p-6">
+                <CardContent className="flex flex-1 flex-col p-4 sm:p-6">
                   <FileUpload files={files} onChange={(f) => { if (!gate()) return; setFiles(f); }} />
                 </CardContent>
 

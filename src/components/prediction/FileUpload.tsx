@@ -78,7 +78,7 @@ export function FileUpload({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-1 flex-col space-y-4">
       {/* Drop zone — only shown when no files uploaded yet */}
       {files.length === 0 && (
         <div
@@ -91,7 +91,7 @@ export function FileUpload({
           onKeyDown={(e) => e.key === "Enter" && inputRef.current?.click()}
           aria-label="Unggah gambar"
           className={[
-            "relative cursor-pointer rounded-xl border-2 border-dashed p-10 text-center transition-colors duration-150 select-none",
+            "relative flex flex-1 cursor-pointer items-center justify-center rounded-xl border-2 border-dashed p-10 text-center transition-colors duration-150 select-none",
             dragOver
               ? "border-foreground/30 bg-secondary/60"
               : "border-border hover:border-foreground/20 hover:bg-secondary/40",
@@ -160,9 +160,9 @@ export function FileUpload({
                   {/* Remove button */}
                   <button
                     type="button"
-                    onClick={() => remove(i)}
+                    onClick={(e) => { e.stopPropagation(); remove(i); }}
                     aria-label={`Hapus ${f.name}`}
-                    className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-md bg-background/90 opacity-0 ring-1 ring-border/60 transition-opacity group-hover:opacity-100"
+                    className="absolute right-1 top-1 z-10 flex h-6 w-6 items-center justify-center rounded-md bg-background/90 ring-1 ring-border/60 transition-opacity hover:bg-destructive hover:text-white hover:ring-destructive/60 sm:opacity-0 sm:group-hover:opacity-100"
                   >
                     <X className="h-3 w-3" />
                   </button>
