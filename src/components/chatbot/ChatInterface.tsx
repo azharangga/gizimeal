@@ -6,6 +6,7 @@ import { Bot, Check, Copy, Loader2, Maximize2, Minimize2, RefreshCw, Send, Thumb
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 interface Message {
   id: string;
@@ -14,6 +15,11 @@ interface Message {
   time: string;
   streaming?: boolean;
   liked?: boolean | null;
+}
+
+interface Suggestion {
+  label: string;
+  message: string;
 }
 
 type BotStatus = "online" | "typing" | "offline";
@@ -30,29 +36,38 @@ function getTimeString(): string {
   return new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" });
 }
 
-function generateReply(input: string): string {
-  const q = input.toLowerCase();
-  const menuMatch = input.match(/menu\s+"([^"]+)"/i);
-  if (menuMatch) {
-    const name = menuMatch[1];
-    return `**${name}** adalah salah satu menu yang cocok dengan bahan yang kamu deteksi. Umumnya menu ini diolah dengan cara ditumis, direbus, atau dipanggang untuk menjaga nilai gizinya.\n\nPilih bahan segar, batasi minyak dan garam, serta tambahkan sayuran agar lebih seimbang. Kamu bisa lihat detail kalori dan nutrisinya pada kartu menu di halaman Deteksi.`;
+async function fetchChatbotReply(
+  message: string,
+  history: { role: "user" | "assistant"; content: string }[],
+): Promise<{ reply: string; suggestions?: Suggestion[] }> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 35000);
+
+  try {
+    const res = await fetch("/api/chatbot/ask", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message, history }),
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeout);
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err?.error || "Gagal mendapatkan respons");
+    }
+
+    return res.json();
+  } catch (error) {
+    clearTimeout(timeout);
+    if (error instanceof DOMException && error.name === "AbortError") {
+      throw new Error(
+        "Server terlalu lama merespons. Kemungkinan sedang cold-start, coba kirim ulang pesan.",
+      );
+    }
+    throw error;
   }
-  if (/(bmr|tdee|kalori harian|kebutuhan kalori)/.test(q)) {
-    return "**BMR** (Basal Metabolic Rate) adalah jumlah kalori yang dibutuhkan tubuh saat istirahat total.\n\n**TDEE** (Total Daily Energy Expenditure) memperhitungkan tingkat aktivitas harianmu di atas BMR.\n\nGiziMeal menggunakan persamaan **Mifflin-St Jeor** untuk menghitung BMR dan faktor **PAL FAO/WHO** untuk TDEE. Kamu bisa menghitungnya di halaman Kalkulator.";
-  }
-  if (/(kurangi kalori|diet|kalori)/.test(q)) {
-    return "Beberapa cara efektif mengurangi kalori:\n- Perbanyak sayur dan buah (rendah kalori, tinggi serat)\n- Pilih protein tanpa lemak (dada ayam, ikan, tahu)\n- Kurangi gorengan, ganti dengan kukus atau panggang\n- Perhatikan ukuran porsi\n- Minum air putih sebelum makan\n\nKonsistensi lebih penting daripada pembatasan ekstrem.";
-  }
-  if (/(menu gizi seimbang|resep|masak|rekomendasi)/.test(q)) {
-    return "Untuk rekomendasi menu gizi seimbang berdasarkan bahan yang kamu punya, gunakan fitur **Deteksi**, upload gambar bahan makanan dan dapatkan rekomendasi menu beserta informasi gizi lengkap.\n\nSetiap rekomendasi dilengkapi skor AKG dan resep yang bisa langsung dipraktikkan.";
-  }
-  if (/(menu harian|menyusun menu|rencana makan)/.test(q)) {
-    return "Tips menyusun menu harian:\n1. **Tentukan** kebutuhan kalori harianmu\n2. **Bagi** porsi sesuai panduan Isi Piringku\n3. **Variasikan** sumber protein, karbohidrat, dan sayur\n4. **Sesuaikan** dengan bahan yang tersedia di rumah\n5. **Perhatikan** keseimbangan gizi setiap kali makan";
-  }
-  if (/(piringku|piring|porsi)/.test(q)) {
-    return "**Isi Piringku** adalah panduan visual dari Kemenkes RI untuk pembagian porsi makan:\n- **1/3 piring**: Makanan pokok (nasi, kentang, roti)\n- **1/3 piring**: Sayur-sayuran\n- **1/6 piring**: Lauk-pauk (protein hewani/nabati)\n- **1/6 piring**: Buah-buahan\n\nDitambah minum air putih minimal 8 gelas per hari.";
-  }
-  return "Saya belum memiliki jawaban spesifik untuk pertanyaan itu. Coba tanyakan tentang:\n- Kebutuhan kalori (BMR/TDEE)\n- Tips menu gizi seimbang \n- Cara menyusun menu harian\n- Penjelasan Isi Piringku\n\nAtau gunakan fitur **Deteksi** untuk rekomendasi berdasarkan bahan makananmu.";
 }
 
 export function ChatInterface({ compact = false, showControls = false, onClose, onToggleFullscreen, isFullscreen }: {
@@ -65,6 +80,7 @@ export function ChatInterface({ compact = false, showControls = false, onClose, 
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [status, setStatus] = useState<BotStatus>("online");
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const streamRef = useRef<number | null>(null);
@@ -90,11 +106,29 @@ export function ChatInterface({ compact = false, showControls = false, onClose, 
     let charIndex = 0;
     setStatus("typing");
 
+    // Pre-compute table ranges so we can skip them during streaming
+    const tableRanges: { start: number; end: number }[] = [];
+    const tableRegex = /(?:^|\n)(\|[^\n]+\|\n\|[-| :]+\|\n(?:\|[^\n]+\|\n?)+)/g;
+    let match;
+    while ((match = tableRegex.exec(fullText)) !== null) {
+      const start = match.index + (fullText[match.index] === "\n" ? 1 : 0);
+      const end = start + match[1].length;
+      tableRanges.push({ start, end });
+    }
+
     setMessages((m) => [...m, { id, role: "bot", text: "", time: getTimeString(), streaming: true, liked: null }]);
 
     const streamNext = () => {
       const chunkSize = 2 + Math.floor(Math.random() * 4);
       charIndex = Math.min(charIndex + chunkSize, fullText.length);
+
+      // If charIndex lands inside a table, skip to the end of that table
+      for (const range of tableRanges) {
+        if (charIndex > range.start && charIndex < range.end) {
+          charIndex = range.end;
+          break;
+        }
+      }
 
       setMessages((m) =>
         m.map((msg) => (msg.id === id ? { ...msg, text: fullText.slice(0, charIndex) } : msg))
@@ -127,12 +161,26 @@ export function ChatInterface({ compact = false, showControls = false, onClose, 
     const id = Date.now().toString();
     setMessages((m) => [...m, { id, role: "user", text: trimmed, time: getTimeString() }]);
     setInput("");
+    setSuggestions([]);
     setStatus("typing");
 
-    setTimeout(() => {
-      const reply = generateReply(trimmed);
-      streamReply(id + "-r", reply);
-    }, 400 + Math.random() * 300);
+    // Build history from current messages for API context
+    const history: { role: "user" | "assistant"; content: string }[] = messages.map((m) => ({
+      role: m.role === "user" ? "user" : "assistant",
+      content: m.text,
+    }));
+
+    fetchChatbotReply(trimmed, history)
+      .then((data) => {
+        streamReply(id + "-r", data.reply);
+        if (data.suggestions && data.suggestions.length > 0) {
+          setSuggestions(data.suggestions);
+        }
+      })
+      .catch((err) => {
+        const errorMsg = err instanceof Error ? err.message : "Terjadi kesalahan, coba lagi nanti.";
+        streamReply(id + "-r", errorMsg);
+      });
 
     inputRef.current?.focus();
   };
@@ -144,6 +192,7 @@ export function ChatInterface({ compact = false, showControls = false, onClose, 
     }
     setMessages([]);
     setInput("");
+    setSuggestions([]);
     setStatus("online");
     toast.success("Percakapan direset", { duration: 2000 });
   };
@@ -284,6 +333,20 @@ export function ChatInterface({ compact = false, showControls = false, onClose, 
 
       {/* Input */}
       <div className={compact ? "border-t border-border bg-background p-2.5" : "border-t border-border bg-background p-3 sm:p-4"}>
+        {/* Suggestions */}
+        {suggestions.length > 0 && !isTyping && (
+          <div className="mb-2 flex flex-wrap gap-1.5">
+            {suggestions.map((s) => (
+              <button
+                key={s.label}
+                onClick={() => send(s.message)}
+                className="rounded-lg border border-border bg-secondary/50 px-2.5 py-1.5 text-[11px] text-foreground/80 transition-all hover:border-primary/30 hover:bg-primary/5 hover:text-foreground"
+              >
+                {s.label}
+              </button>
+            ))}
+          </div>
+        )}
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -403,12 +466,31 @@ function MessageContent({ text }: { text: string }) {
   if (!text) return null;
   return (
     <ReactMarkdown
+      remarkPlugins={[remarkGfm]}
       components={{
         p: ({ children }) => <p className="mb-1 last:mb-0">{children}</p>,
         strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
         ul: ({ children }) => <ul className="my-1 ml-4 list-disc space-y-0.5">{children}</ul>,
         ol: ({ children }) => <ol className="my-1 ml-4 list-decimal space-y-0.5">{children}</ol>,
         li: ({ children }) => <li>{children}</li>,
+        table: ({ children }) => (
+          <div className="my-2 overflow-x-auto rounded-lg border border-border">
+            <table className="w-full text-[12px]">{children}</table>
+          </div>
+        ),
+        thead: ({ children }) => (
+          <thead className="bg-secondary/60">{children}</thead>
+        ),
+        tbody: ({ children }) => <tbody>{children}</tbody>,
+        tr: ({ children }) => (
+          <tr className="border-b border-border last:border-b-0">{children}</tr>
+        ),
+        th: ({ children }) => (
+          <th className="px-2.5 py-1.5 text-left font-semibold text-foreground">{children}</th>
+        ),
+        td: ({ children }) => (
+          <td className="px-2.5 py-1.5 text-foreground/80">{children}</td>
+        ),
       }}
     >
       {text}
