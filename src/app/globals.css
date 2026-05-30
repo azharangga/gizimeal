@@ -271,3 +271,26 @@
     }
   }
 }
+
+/* Chat KaTeX math overflow fix */
+.chat-math-content .katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.5rem 0;
+  margin: 0.25rem 0;
+  font-size: 0.85em;
+}
+
+.chat-math-content .katex-display > .katex {
+  white-space: normal;
+}
+
+.chat-math-content .katex {
+  font-size: 0.9em;
+}
+
+.chat-math-content .katex-display > .katex > .katex-html {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 2px;
+}
