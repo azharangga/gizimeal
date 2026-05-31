@@ -25,12 +25,12 @@ interface Suggestion {
   message: string;
 }
 
-type BotStatus = "online" | "typing" | "offline";
+type BotStatus = "online" | "waiting" | "typing" | "offline";
 
 const QUICK_PROMPTS = [
   "Apa itu BMR dan TDEE?",
   "Cara mengurangi kalori harian?",
-  "menu gizi seimbang dari ayam & kentang?",
+  "Bagaimana cara menghitung kebutuhan gizi?",
   "Tips menyusun menu harian",
   "Jelaskan panduan Isi Piringku",
 ];
@@ -102,13 +102,6 @@ export function ChatInterface({ compact = false, showControls = false, onClose, 
     scrollToBottom();
   }, [messages, scrollToBottom]);
 
-  useEffect(() => {
-    if (status === "online") {
-      const t = setTimeout(() => setStatus("offline"), 120000);
-      return () => clearTimeout(t);
-    }
-  }, [status, messages]);
-
   const streamReply = (id: string, fullText: string) => {
     let charIndex = 0;
     setStatus("typing");
@@ -179,7 +172,7 @@ export function ChatInterface({ compact = false, showControls = false, onClose, 
     options?: { messageId?: string; baseHistory?: Message[] },
   ) => {
     const trimmed = text.trim();
-    if (!trimmed || status === "typing") return;
+    if (!trimmed || status === "typing" || status === "waiting") return;
     const id = options?.messageId ?? Date.now().toString();
     const baseHistory = options?.baseHistory ?? messages;
 
@@ -194,7 +187,7 @@ export function ChatInterface({ compact = false, showControls = false, onClose, 
     });
     setInput("");
     setSuggestions([]);
-    setStatus("typing");
+    setStatus("waiting");
 
     // Create abort controller for this request
     const controller = new AbortController();
@@ -216,8 +209,11 @@ export function ChatInterface({ compact = false, showControls = false, onClose, 
       })
       .catch((err) => {
         if (controller.signal.aborted) return;
+        setStatus("offline");
         const errorMsg = err instanceof Error ? err.message : "Terjadi kesalahan, coba lagi nanti.";
-        streamReply(id + "-r", errorMsg);
+        // Show error as a bot message without streaming
+        const replyId = id + "-r";
+        setMessages((m) => [...m, { id: replyId, role: "bot", text: errorMsg, time: getTimeString(), streaming: false, liked: null }]);
       });
 
     inputRef.current?.focus();
@@ -244,7 +240,7 @@ export function ChatInterface({ compact = false, showControls = false, onClose, 
   };
 
   const handleStartEdit = (id: string, currentText: string) => {
-    if (isTyping) return;
+    if (isBusy) return;
     setEditingId(id);
     setEditText(currentText);
     // Auto-focus the textarea after render
@@ -316,7 +312,7 @@ export function ChatInterface({ compact = false, showControls = false, onClose, 
   };
 
   const isEmpty = messages.length === 0;
-  const isTyping = status === "typing";
+  const isBusy = status === "typing" || status === "waiting";
 
   return (
     <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
@@ -450,7 +446,7 @@ export function ChatInterface({ compact = false, showControls = false, onClose, 
                       </div>
                     )}
                     {/* User message actions: edit */}
-                    {m.role === "user" && editingId !== m.id && !isTyping && (
+                    {m.role === "user" && editingId !== m.id && !isBusy && (
                       <div className="mt-1 mr-1 flex items-center justify-end gap-2">
                         <button
                           onClick={() => handleStartEdit(m.id, m.text)}
@@ -496,6 +492,26 @@ export function ChatInterface({ compact = false, showControls = false, onClose, 
                 </motion.div>
               ))}
             </AnimatePresence>
+            {/* Thinking indicator - shows while waiting for API response */}
+            <AnimatePresence>
+              {status === "waiting" && (
+                <motion.div
+                  key="thinking"
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                  className="flex justify-start gap-2"
+                >
+                  <span className="mt-1 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                    <Bot className="h-3 w-3" />
+                  </span>
+                  <div className="rounded-2xl rounded-bl-sm border border-border-soft bg-secondary/50 px-4 py-3">
+                    <ThinkingDots />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         )}
       </div>
@@ -503,7 +519,7 @@ export function ChatInterface({ compact = false, showControls = false, onClose, 
       {/* Input */}
       <div className={compact ? "border-t border-border bg-background p-2.5" : "border-t border-border bg-background p-3 sm:p-4"}>
         {/* Suggestions */}
-        {suggestions.length > 0 && !isTyping && (
+        {suggestions.length > 0 && !isBusy && (
           <div className="mb-2 flex flex-wrap gap-1.5">
             {suggestions.map((s) => (
               <button
@@ -529,10 +545,10 @@ export function ChatInterface({ compact = false, showControls = false, onClose, 
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ketik pesan..."
             aria-label="Pesan"
-            disabled={isTyping}
+            disabled={isBusy}
             className={compact ? "flex-1 bg-transparent px-3 py-2.5 text-[13px] placeholder:text-muted-foreground focus:outline-none disabled:opacity-50" : "flex-1 bg-transparent px-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none disabled:opacity-50"}
           />
-          {isTyping ? (
+          {isBusy ? (
             <button
               type="button"
               onClick={handleCancel}
@@ -612,7 +628,7 @@ function EmptyChat({ onPromptClick, compact = false }: { onPromptClick: (text: s
           <Bot className={compact ? "h-5 w-5" : "h-7 w-7"} />
         </span>
         <h2 className={compact ? "mt-3 text-[13px] font-semibold" : "mt-4 text-lg font-semibold"}>Halo! Saya GiziBot</h2>
-        <p className={compact ? "mt-0.5 text-xs text-muted-foreground" : "mt-1 text-sm text-muted-foreground"}>Tanyakan seputar gizi & menu gizi seimbang</p>
+        <p className={compact ? "mt-0.5 text-xs text-muted-foreground" : "mt-1 text-sm text-muted-foreground"}>Asisten edukasi gizi siap membantu Anda</p>
       </motion.div>
 
       <motion.div
@@ -673,6 +689,29 @@ function MessageContent({ text }: { text: string }) {
       >
         {text}
       </ReactMarkdown>
+    </div>
+  );
+}
+
+function ThinkingDots() {
+  return (
+    <div className="flex items-center gap-[5px] px-1 py-0.5">
+      {[0, 1, 2].map((i) => (
+        <motion.span
+          key={i}
+          className="h-[7px] w-[7px] rounded-full bg-primary/70"
+          animate={{
+            scale: [1, 1.3, 1],
+            opacity: [0.35, 1, 0.35],
+          }}
+          transition={{
+            duration: 1.2,
+            repeat: Infinity,
+            delay: i * 0.2,
+            ease: [0.4, 0, 0.2, 1],
+          }}
+        />
+      ))}
     </div>
   );
 }
