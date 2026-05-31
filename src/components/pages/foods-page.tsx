@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowUpDown, ChevronLeft, ChevronRight, Database, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ErrorAlert } from "@/components/common/ErrorAlert";
 import { MedicalDisclaimer } from "@/components/common/MedicalDisclaimer";
@@ -16,13 +17,21 @@ import type { FoodItem } from "@/lib/types";
 
 const SUGGESTIONS = ["chicken", "rice", "egg", "apple", "potato", "fish"];
 
-type SortKey = "default" | "kcal-asc" | "kcal-desc" | "protein-desc" | "fibre-desc";
+type SortKey = "default" | "kcal-asc" | "kcal-desc" | "protein-desc" | "protein-asc" | "fat-desc" | "fat-asc" | "fibre-desc" | "fibre-asc" | "calcium-desc" | "calcium-asc" | "akg-desc" | "akg-asc";
 const SORTS: { value: SortKey; label: string }[] = [
   { value: "default", label: "Default" },
-  { value: "kcal-asc", label: "Kalori ↑" },
-  { value: "kcal-desc", label: "Kalori ↓" },
-  { value: "protein-desc", label: "Protein tinggi" },
-  { value: "fibre-desc", label: "Serat tinggi" },
+  { value: "akg-desc", label: "Skor AKG tertinggi" },
+  { value: "akg-asc", label: "Skor AKG terendah" },
+  { value: "kcal-desc", label: "Kalori tertinggi" },
+  { value: "kcal-asc", label: "Kalori terendah" },
+  { value: "protein-desc", label: "Protein tertinggi" },
+  { value: "protein-asc", label: "Protein terendah" },
+  { value: "fat-desc", label: "Lemak tertinggi" },
+  { value: "fat-asc", label: "Lemak terendah" },
+  { value: "fibre-desc", label: "Serat tertinggi" },
+  { value: "fibre-asc", label: "Serat terendah" },
+  { value: "calcium-desc", label: "Kalsium tertinggi" },
+  { value: "calcium-asc", label: "Kalsium terendah" },
 ];
 
 function num(v: unknown): number {
@@ -96,10 +105,18 @@ export function FoodsPage() {
     if (sort === "default") return items;
     const arr = [...items];
     const cmp: Record<Exclude<SortKey, "default">, (a: FoodItem, b: FoodItem) => number> = {
+      "akg-desc": (a, b) => num(b["score_akg"]) - num(a["score_akg"]),
+      "akg-asc": (a, b) => num(a["score_akg"]) - num(b["score_akg"]),
       "kcal-asc": (a, b) => num(a["Energy kcal"]) - num(b["Energy kcal"]),
       "kcal-desc": (a, b) => num(b["Energy kcal"]) - num(a["Energy kcal"]),
       "protein-desc": (a, b) => num(b["Protein(g)"]) - num(a["Protein(g)"]),
+      "protein-asc": (a, b) => num(a["Protein(g)"]) - num(b["Protein(g)"]),
+      "fat-desc": (a, b) => num(b["Fat(g)"]) - num(a["Fat(g)"]),
+      "fat-asc": (a, b) => num(a["Fat(g)"]) - num(b["Fat(g)"]),
       "fibre-desc": (a, b) => num(b["Fibre(g)"]) - num(a["Fibre(g)"]),
+      "fibre-asc": (a, b) => num(a["Fibre(g)"]) - num(b["Fibre(g)"]),
+      "calcium-desc": (a, b) => num(b["Calcium(mg)"]) - num(a["Calcium(mg)"]),
+      "calcium-asc": (a, b) => num(a["Calcium(mg)"]) - num(b["Calcium(mg)"]),
     };
     arr.sort(cmp[sort]);
     return arr;
@@ -171,58 +188,72 @@ export function FoodsPage() {
                 </span>
               )}
             </div>
-            <div className="flex flex-wrap items-center gap-1.5">
-              <span className="mr-1 inline-flex items-center gap-1 text-xs text-muted-foreground">
-                <ArrowUpDown className="h-3 w-3" /> Urutkan:
+            <div className="flex items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+                <ArrowUpDown className="h-3.5 w-3.5" />
+                Urutkan
               </span>
-              {SORTS.map((s) => (
-                <button
-                  key={s.value}
-                  onClick={() => setSort(s.value)}
-                  className={[
-                    "rounded-full border px-2.5 py-1 text-[11px] transition-colors",
-                    sort === s.value
-                      ? "border-foreground/30 bg-secondary text-foreground font-medium"
-                      : "border-border bg-background text-muted-foreground hover:border-foreground/30 hover:text-foreground",
-                  ].join(" ")}
-                >
-                  {s.label}
-                </button>
-              ))}
+              <Select value={sort} onValueChange={(v) => setSort(v as SortKey)}>
+                <SelectTrigger className="h-9 w-[180px] rounded-lg text-xs">
+                  <SelectValue placeholder="Default" />
+                </SelectTrigger>
+                <SelectContent>
+                  {SORTS.map((s) => (
+                    <SelectItem key={s.value} value={s.value} className="text-xs">
+                      {s.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
           {loading ? (
-            <div className="overflow-x-auto rounded-xl border border-border bg-card">
-              <table className="w-full caption-bottom text-sm">
-                <thead className="[&_tr]:border-b">
-                  <tr className="border-b transition-colors">
-                    <th className="h-10 w-12 px-2 text-center text-xs font-medium text-muted-foreground">No</th>
-                    <th className="h-10 px-2 text-left text-xs font-medium text-muted-foreground">Food Items</th>
-                    <th className="h-10 px-2 text-left font-mono text-xs font-medium text-muted-foreground whitespace-nowrap">Energi (kcal)</th>
-                    <th className="h-10 px-2 text-left font-mono text-xs font-medium text-muted-foreground whitespace-nowrap">Karbohidrat (g)</th>
-                    <th className="h-10 px-2 text-left font-mono text-xs font-medium text-muted-foreground whitespace-nowrap">Protein (g)</th>
-                    <th className="h-10 px-2 text-left font-mono text-xs font-medium text-muted-foreground whitespace-nowrap">Lemak (g)</th>
-                    <th className="h-10 px-2 text-left font-mono text-xs font-medium text-muted-foreground whitespace-nowrap">Serat (g)</th>
-                    <th className="h-10 px-2 text-left font-mono text-xs font-medium text-muted-foreground whitespace-nowrap">Kalsium (mg)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {Array.from({ length: 6 }).map((_, i) => (
-                    <tr key={i} className="border-b transition-colors">
-                      <td className="p-2 text-center"><Skeleton className="mx-auto h-4 w-5" /></td>
-                      <td className="p-2"><Skeleton className="h-4 w-32" /></td>
-                      <td className="p-2"><Skeleton className="h-4 w-12" /></td>
-                      <td className="p-2"><Skeleton className="h-4 w-12" /></td>
-                      <td className="p-2"><Skeleton className="h-4 w-12" /></td>
-                      <td className="p-2"><Skeleton className="h-4 w-12" /></td>
-                      <td className="p-2"><Skeleton className="h-4 w-12" /></td>
-                      <td className="p-2"><Skeleton className="h-4 w-12" /></td>
+            <>
+              <div className="overflow-x-auto rounded-xl border border-border bg-card">
+                <table className="w-full caption-bottom text-sm">
+                  <thead className="[&_tr]:border-b">
+                    <tr className="border-b transition-colors">
+                      <th className="h-10 w-12 px-2 text-center text-xs font-medium text-muted-foreground">No</th>
+                      <th className="h-10 px-2 text-left text-xs font-medium text-muted-foreground">Food Items</th>
+                      <th className="h-10 px-2 text-left font-mono text-xs font-medium text-muted-foreground whitespace-nowrap">Energi (kcal)</th>
+                      <th className="h-10 px-2 text-left font-mono text-xs font-medium text-muted-foreground whitespace-nowrap">Karbohidrat (g)</th>
+                      <th className="h-10 px-2 text-left font-mono text-xs font-medium text-muted-foreground whitespace-nowrap">Protein (g)</th>
+                      <th className="h-10 px-2 text-left font-mono text-xs font-medium text-muted-foreground whitespace-nowrap">Lemak (g)</th>
+                      <th className="h-10 px-2 text-left font-mono text-xs font-medium text-muted-foreground whitespace-nowrap">Serat (g)</th>
+                      <th className="h-10 px-2 text-left font-mono text-xs font-medium text-muted-foreground whitespace-nowrap">Kalsium (mg)</th>
+                      <th className="h-10 px-2 text-left font-mono text-xs font-medium text-muted-foreground whitespace-nowrap">Skor AKG</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {Array.from({ length: 10 }).map((_, i) => (
+                      <tr key={i} className="border-b transition-colors">
+                        <td className="p-2 text-center"><Skeleton className="mx-auto h-4 w-5" /></td>
+                        <td className="p-2"><Skeleton className="h-4 w-32" /></td>
+                        <td className="p-2"><Skeleton className="h-4 w-12" /></td>
+                        <td className="p-2"><Skeleton className="h-4 w-12" /></td>
+                        <td className="p-2"><Skeleton className="h-4 w-12" /></td>
+                        <td className="p-2"><Skeleton className="h-4 w-12" /></td>
+                        <td className="p-2"><Skeleton className="h-4 w-12" /></td>
+                        <td className="p-2"><Skeleton className="h-4 w-12" /></td>
+                        <td className="p-2"><Skeleton className="h-4 w-12" /></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              {/* Pagination skeleton */}
+              <div className="mt-6 flex items-center justify-between">
+                <Skeleton className="h-4 w-28" />
+                <div className="flex items-center gap-1">
+                  <Skeleton className="h-8 w-8 rounded-md" />
+                  <Skeleton className="h-8 w-8 rounded-md" />
+                  <Skeleton className="h-8 w-8 rounded-md" />
+                  <Skeleton className="h-8 w-8 rounded-md" />
+                  <Skeleton className="h-8 w-8 rounded-md" />
+                </div>
+              </div>
+            </>
           ) : error ? (
             <ErrorAlert message={error} />
           ) : items.length === 0 ? (
@@ -281,7 +312,7 @@ export function FoodsPage() {
           )}
 
           <div className="mt-10">
-            <MedicalDisclaimer compact />
+            <MedicalDisclaimer />
           </div>
         </FadeUp>
       </section>
