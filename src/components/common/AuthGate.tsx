@@ -16,7 +16,7 @@ import { useCallback, useState } from "react";
 /**
  * useAuthGate — gate function + login prompt modal.
  */
-export function useAuthGate() {
+export function useAuthGate(options?: { title?: string; description?: string }) {
   const { isAuthenticated } = useAuth();
   const [open, setOpen] = useState(false);
 
@@ -34,9 +34,9 @@ export function useAuthGate() {
             <div className="flex h-11 w-11 items-center justify-center rounded-full bg-muted">
               <Lock className="h-5 w-5 text-muted-foreground" />
             </div>
-            <DialogTitle className="mt-3">Masuk untuk Melanjutkan</DialogTitle>
+            <DialogTitle className="mt-3">{options?.title || "Masuk untuk Melanjutkan"}</DialogTitle>
             <DialogDescription>
-              Fitur ini memerlukan akun. Masuk atau daftar gratis untuk menggunakan GiziMeal.
+              {options?.description || "Fitur ini memerlukan akun. Masuk atau daftar gratis untuk menggunakan GiziMeal."}
             </DialogDescription>
           </DialogHeader>
           <div className="mt-4 space-y-2">

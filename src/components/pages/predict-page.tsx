@@ -24,6 +24,21 @@ import { checkHealth, predictFoods } from "@/lib/api";
 import { savePrediction } from "@/lib/predict-store";
 import { toast } from "sonner";
 import { useAuthGate } from "@/components/common/AuthGate";
+import { useAuth } from "@/lib/auth";
+
+const GUEST_PREDICT_LIMIT = 3;
+const STORAGE_KEY = "gizimeal_predict_count";
+
+function getGuestPredictCount(): number {
+  if (typeof window === "undefined") return 0;
+  const val = localStorage.getItem(STORAGE_KEY);
+  return val ? parseInt(val, 10) || 0 : 0;
+}
+
+function incrementGuestPredictCount(): void {
+  const current = getGuestPredictCount();
+  localStorage.setItem(STORAGE_KEY, String(current + 1));
+}
 
 export function PredictPage() {
   const router = useRouter();
@@ -31,7 +46,11 @@ export function PredictPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [modelReady, setModelReady] = useState<boolean | null>(null);
-  const { gate, LoginPrompt } = useAuthGate();
+  const { isAuthenticated } = useAuth();
+  const { gate, LoginPrompt } = useAuthGate({
+    title: "Kuota Deteksi Habis",
+    description: "Kamu sudah menggunakan 3 kali deteksi gratis. Masuk atau daftar untuk deteksi tanpa batas.",
+  });
 
   useEffect(() => {
     checkHealth()
@@ -44,12 +63,27 @@ export function PredictPage() {
       toast.error("Pilih minimal satu gambar untuk dideteksi.");
       return;
     }
+
+    // Check quota for unauthenticated users
+    if (!isAuthenticated) {
+      const count = getGuestPredictCount();
+      if (count >= GUEST_PREDICT_LIMIT) {
+        gate(); // Show login prompt
+        return;
+      }
+    }
+
     setLoading(true);
     setError(null);
     const tId = toast.loading("Menganalisis gambar...");
     try {
       const data = await predictFoods(files);
       savePrediction(data);
+
+      // Increment guest count if not authenticated
+      if (!isAuthenticated) {
+        incrementGuestPredictCount();
+      }
 
       // Save to history (fire and forget)
       const historyPayload = {
@@ -142,7 +176,7 @@ export function PredictPage() {
                   </span>
                 </div>
                 <CardContent className="flex flex-1 flex-col p-4 sm:p-6">
-                  <FileUpload files={files} onChange={(f) => { if (!gate()) return; setFiles(f); }} />
+                  <FileUpload files={files} onChange={setFiles} />
                 </CardContent>
 
                 {/* Action bar */}

@@ -37,7 +37,7 @@ export function MenuRecommendationCard({
             {menu.is_best && (
               <span className="mb-2 inline-flex items-center gap-1 rounded-md bg-primary px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary-foreground">
                 <Star className="h-2.5 w-2.5 fill-primary-foreground" />
-                Terbaik
+                Rekomendasi
               </span>
             )}
             <h3 className="font-semibold text-base leading-snug text-foreground line-clamp-2">
