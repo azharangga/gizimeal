@@ -1,9 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CheckCircle2, Compass, Target, Layers, Github, Mail } from "lucide-react";
+import { CheckCircle2, Compass, Target, Layers, Github, Mail, Linkedin } from "lucide-react";
 import { MedicalDisclaimer } from "@/components/common/MedicalDisclaimer";
 import { PageHeader } from "@/components/common/PageHeader";
+import Image from "next/image";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const PILLARS = [
   {
@@ -41,10 +43,12 @@ const TEAM = [
   {
     name: "Azharangga Kusuma",
     cohortId: "CACC370D6Y0721",
-    role: "AI Engineer & Project Manager",
+    role: "AI Engineer",
     path: "AI Engineer",
     email: "CACC370D6Y0721@student.devacademy.id",
-    github: "https://github.com/azharanggakusuma",
+    github: "https://github.com/azharangga",
+    linkedin: "https://linkedin.com/in/azharanggakusuma",
+    image: "/Team/angga.png",
   },
   {
     name: "Putri Nabilla",
@@ -53,6 +57,8 @@ const TEAM = [
     path: "AI Engineer",
     email: "CACC370D6X1171@student.devacademy.id",
     github: "https://github.com/putribila",
+    linkedin: "https://linkedin.com/in/putri-nabilla-77a670223",
+    image: "/Team/billa.png",
   },
   {
     name: "Farina Setya Rahesti",
@@ -61,6 +67,8 @@ const TEAM = [
     path: "Data Scientist",
     email: "CDCC796D6X0089@student.devacademy.id",
     github: "https://github.com/farinasetyarahesti",
+    linkedin: "https://www.linkedin.com/in/farina-setya-91474a3ab",
+    image: "/Team/farina.png",
   },
   {
     name: "Mahaputri Buana Devwitasari",
@@ -69,6 +77,8 @@ const TEAM = [
     path: "Data Scientist",
     email: "CDCC796D6X0088@student.devacademy.id",
     github: "https://github.com/mahaputribuanaa",
+    linkedin: "https://www.linkedin.com/in/mahaputri-buana-87b924332",
+    image: "/Team/buana.png",
   },
   {
     name: "M. Dava Arya Nada Putra",
@@ -77,6 +87,8 @@ const TEAM = [
     path: "Full-Stack Web Developer",
     email: "CFCC258D6Y1955@student.devacademy.id",
     github: "https://github.com/mdavaarya",
+    linkedin: "https://www.linkedin.com/in/m-dava-arya-nada-putra-a2ba8a3a5",
+    image: "/Team/dava.png",
   },
   {
     name: "Muhammad Ihsanul Dzaky",
@@ -85,6 +97,8 @@ const TEAM = [
     path: "Full-Stack Web Developer",
     email: "CFCC308D6Y1451@student.devacademy.id",
     github: "https://github.com/ihsanulDzaky",
+    linkedin: "https://www.linkedin.com/in/muhammad-ihsanul-dzaky",
+    image: "/Team/dzaky.png",
   },
 ];
 
@@ -194,13 +208,34 @@ export function AboutPage() {
                   <div className="p-6">
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex min-w-0 items-center gap-3.5">
-                        <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-muted text-sm font-semibold text-muted-foreground">
-                          {getInitials(member.name)}
+                        <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-full bg-muted">
+                          {member.image ? (
+                            <Image
+                              src={member.image}
+                              alt={member.name}
+                              fill
+                              sizes="48px"
+                              className="object-cover"
+                            />
+                          ) : (
+                            <div className="flex h-full w-full items-center justify-center text-sm font-semibold text-muted-foreground">
+                              {getInitials(member.name)}
+                            </div>
+                          )}
                         </div>
                         <div className="min-w-0">
-                          <h3 className="truncate text-[15px] font-semibold leading-tight tracking-tight">
-                            {member.name}
-                          </h3>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <h3 className="whitespace-normal sm:truncate text-[15px] font-semibold leading-tight tracking-tight">
+                                  {member.name}
+                                </h3>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>{member.name}</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
                           <p className="mt-0.5 truncate text-xs text-muted-foreground">
                             {member.role}
                           </p>
@@ -224,6 +259,17 @@ export function AboutPage() {
                         >
                           <Github className="h-4 w-4" strokeWidth={1.8} />
                         </a>
+                        {member.linkedin && (
+                          <a
+                            href={member.linkedin}
+                            target="_blank"
+                            rel="noreferrer noopener"
+                            aria-label={`LinkedIn ${member.name}`}
+                            className="flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                          >
+                            <Linkedin className="h-4 w-4" strokeWidth={1.8} />
+                          </a>
+                        )}
                       </div>
                     </div>
 

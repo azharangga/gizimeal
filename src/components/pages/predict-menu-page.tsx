@@ -36,6 +36,13 @@ export function MenuPage() {
   const router = useRouter();
   const [menu, setMenu] = useState<MenuRecommendation | null>(null);
   const [hydrated, setHydrated] = useState(false);
+  const [aiRecipe, setAiRecipe] = useState<{
+    nama_masakan: string;
+    bahan_bahan: string[];
+    cara_memasak: string[];
+    catatan_gizi?: string;
+  } | null>(null);
+  const [isGeneratingRecipe, setIsGeneratingRecipe] = useState(false);
 
   useEffect(() => {
     const data = loadPrediction();
@@ -47,6 +54,39 @@ export function MenuPage() {
     }
   }, [slug, router]);
 
+  useEffect(() => {
+    if (!menu) return;
+
+    const cacheKey = `gizimeal_recipe_${menu.menu_name}`;
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {
+      try {
+        setAiRecipe(JSON.parse(cached));
+        return;
+      } catch (e) {
+        console.error("Cache parsing error", e);
+      }
+    }
+
+    async function fetchRecipeDetails() {
+      setIsGeneratingRecipe(true);
+      try {
+        const response = await fetch(`/api/recipe-details?menu_name=${encodeURIComponent(menu!.menu_name)}`);
+        const result = await response.json();
+        if (response.ok && result.success && result.data) {
+          setAiRecipe(result.data);
+          localStorage.setItem(cacheKey, JSON.stringify(result.data));
+        }
+      } catch (err) {
+        console.error("Gagal memuat resep dari AI:", err);
+      } finally {
+        setIsGeneratingRecipe(false);
+      }
+    }
+
+    fetchRecipeDetails();
+  }, [menu]);
+
   if (!hydrated || !menu) {
     return <MenuSkeleton />;
   }
@@ -54,16 +94,19 @@ export function MenuPage() {
   const recipe = buildRecipe(menu);
   const kcal = menu.nutrients?.["Energy kcal"];
 
+  const dynamicIngredients = aiRecipe?.bahan_bahan || recipe.ingredients;
+  const dynamicSteps = aiRecipe?.cara_memasak || recipe.steps;
+
   return (
     <>
       {/* Hero */}
       <section className="border-b border-border bg-secondary/40">
         <div className="mx-auto max-w-[1240px] px-4 pt-8 pb-12 sm:px-6 md:pt-10 md:pb-14">
           <Button
-            asChild
-            variant="ghost"
-            size="sm"
-            className="-ml-3 text-muted-foreground hover:text-foreground"
+             asChild
+             variant="ghost"
+             size="sm"
+             className="-ml-3 text-muted-foreground hover:text-foreground"
           >
             <Link href="/predict/result">
               <ArrowLeft className="mr-1.5 h-3.5 w-3.5" />
@@ -114,6 +157,21 @@ export function MenuPage() {
           <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
             <SlideInLeft className="lg:col-span-4">
               <div className="sticky top-20 space-y-6">
+                {aiRecipe?.catatan_gizi && (
+                  <Card>
+                    <CardContent className="p-6">
+                      <h3 className="flex items-center gap-2 text-base font-semibold">
+                        <HeartPulse className="h-4 w-4 text-muted-foreground" strokeWidth={1.8} />
+                        Catatan Gizi
+                      </h3>
+                      <Separator className="my-4" />
+                      <p className="text-xs leading-relaxed text-foreground/90">
+                        {aiRecipe.catatan_gizi}
+                      </p>
+                    </CardContent>
+                  </Card>
+                )}
+
                 <Card>
                   <CardContent className="p-6">
                     <h3 className="flex items-center gap-2 text-base font-semibold">
@@ -171,18 +229,34 @@ export function MenuPage() {
                   </span>
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Bahan-bahan</p>
-                    <h2 className="text-xl font-semibold">{recipe.ingredients.length} bahan</h2>
+                    <h2 className="text-xl font-semibold">
+                      {isGeneratingRecipe ? "Memuat..." : `${dynamicIngredients.length} bahan`}
+                    </h2>
                   </div>
                 </div>
 
-                <ul className="mt-6 space-y-2.5 text-sm">
-                  {recipe.ingredients.map((it: string, i: number) => (
-                    <motion.li key={it} initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.25, delay: i * 0.03 }} className="flex items-start gap-2.5">
-                      <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-muted-foreground/40" />
-                      <span className="text-foreground/90">{it}</span>
-                    </motion.li>
-                  ))}
-                </ul>
+                {isGeneratingRecipe ? (
+                  <div className="mt-6 space-y-2.5">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Skeleton key={i} className="h-5 w-full max-w-sm" />
+                    ))}
+                  </div>
+                ) : (
+                  <ul className="mt-6 space-y-2.5 text-sm">
+                    {dynamicIngredients.map((it: string, i: number) => (
+                      <motion.li
+                        key={it + i}
+                        initial={{ opacity: 0, x: -6 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.25, delay: i * 0.03 }}
+                        className="flex items-start gap-2.5"
+                      >
+                        <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-muted-foreground/40" />
+                        <span className="text-foreground/90">{it}</span>
+                      </motion.li>
+                    ))}
+                  </ul>
+                )}
               </section>
 
               <section>
@@ -192,18 +266,42 @@ export function MenuPage() {
                   </span>
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Cara Memasak</p>
-                    <h2 className="text-xl font-semibold">{recipe.steps.length} langkah</h2>
+                    <h2 className="text-xl font-semibold">
+                      {isGeneratingRecipe ? "Memuat..." : `${dynamicSteps.length} langkah`}
+                    </h2>
                   </div>
                 </div>
 
-                <ol className="mt-6 space-y-3">
-                  {recipe.steps.map((s: string, i: number) => (
-                    <motion.li key={i} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: i * 0.05 }} className="flex gap-4 rounded-lg border border-border bg-card p-4">
-                      <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border border-border bg-secondary text-xs font-semibold text-foreground">{i + 1}</span>
-                      <p className="pt-0.5 text-sm leading-relaxed text-foreground/90">{s}</p>
-                    </motion.li>
-                  ))}
-                </ol>
+                {isGeneratingRecipe ? (
+                  <div className="mt-6 space-y-3">
+                    {Array.from({ length: 4 }).map((_, i) => (
+                      <div key={i} className="flex gap-4 rounded-lg border border-border bg-card p-4">
+                        <Skeleton className="h-7 w-7 rounded-full flex-shrink-0" />
+                        <div className="flex-1 space-y-2 pt-0.5">
+                          <Skeleton className="h-4 w-full" />
+                          <Skeleton className="h-4 w-3/4" />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <ol className="mt-6 space-y-3">
+                    {dynamicSteps.map((s: string, i: number) => (
+                      <motion.li
+                        key={i}
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3, delay: i * 0.05 }}
+                        className="flex gap-4 rounded-lg border border-border bg-card p-4"
+                      >
+                        <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border border-border bg-secondary text-xs font-semibold text-foreground">
+                          {i + 1}
+                        </span>
+                        <p className="pt-0.5 text-sm leading-relaxed text-foreground/90">{s}</p>
+                      </motion.li>
+                    ))}
+                  </ol>
+                )}
               </section>
             </SlideInRight>
           </div>
